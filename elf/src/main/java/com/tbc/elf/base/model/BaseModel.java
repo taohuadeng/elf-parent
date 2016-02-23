@@ -10,7 +10,7 @@ import java.util.Date;
  * 所有实体类的父类
  */
 @MappedSuperclass
-public class BaseModel {
+public class BaseModel   {
     /**
      * 企业编号
      */
