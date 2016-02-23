@@ -8,6 +8,9 @@
           <element id="module-output" name="elf" />
         </element>
         <element id="directory" name="lib">
+          <element id="archive" name="elf-api-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="elf-api" />
+          </element>
           <element id="library" level="project" name="Maven: org.mortbay.jetty:jsp-api-2.1-glassfish:9.1.1.B60.25.p2" />
           <element id="library" level="project" name="Maven: org.mortbay.jetty:jetty:6.1.26" />
           <element id="library" level="project" name="Maven: org.mortbay.jetty:jetty-util:6.1.26" />
@@ -48,8 +51,7 @@
           <element id="library" level="project" name="Maven: org.jboss.spec.javax.transaction:jboss-transaction-api_1.1_spec:1.0.1.Final" />
           <element id="library" level="project" name="Maven: org.hibernate.javax.persistence:hibernate-jpa-2.0-api:1.0.0-CR-1" />
           <element id="library" level="project" name="Maven: org.hibernate.common:hibernate-commons-annotations:4.0.2.Final" />
-          <element id="library" level="project" name="Maven: org.hibernate:hibernate-annotations:3.5.6-Final" />
-          <element id="library" level="project" name="Maven: org.hibernate:hibernate-commons-annotations:4.2.7.Final" />
+          <element id="library" level="project" name="Maven: org.hibernate:hibernate-commons-annotations:3.2.0.Final" />
           <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.6.1" />
           <element id="library" level="project" name="Maven: commons-dbcp:commons-dbcp:1.4" />
           <element id="library" level="project" name="Maven: commons-pool:commons-pool:1.5.4" />
