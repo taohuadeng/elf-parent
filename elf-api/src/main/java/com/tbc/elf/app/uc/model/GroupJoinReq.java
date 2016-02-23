@@ -2,17 +2,17 @@ package com.tbc.elf.app.uc.model;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
- * Created by Administrator on 2016/2/23.
+ * 群组申请
+ *
+ * @author ELF@TEAM
+ * @since 2016年2月23日17:03:00
  */
-@Table(name="t_uc_group_join_req")
+@Entity
+@Table(name = "t_uc_group_join_req")
 public class GroupJoinReq {
-
     /**
      * 主键
      */
@@ -26,24 +26,25 @@ public class GroupJoinReq {
      * 申请人的用户id
      */
     @Column(nullable = false, length = 32)
-	private String userId;
+    private String userId;
 
     /**
      * 申请备注信息
      */
-    @Column( length = 1300)
-	private String reqComment;
+    @Column(length = 1300)
+    private String reqComment;
+
     /**
      * 申请的群组id
      */
     @Column(nullable = false, length = 32)
-	private String groupId;
+    private String groupId;
+
     /**
      * 申请的状态
      */
-
     @Column(nullable = false, length = 50)
-	private String status;
+    private String status;
 
     /**
      * 拒绝备注

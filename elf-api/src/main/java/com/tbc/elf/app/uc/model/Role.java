@@ -12,10 +12,13 @@ import java.util.List;
 
 /**
  * 系统角色表
+ *
+ * @author TaoFaDeng@ELF@TEAM
+ * @since 2016年2月23日17:03:00
  */
 @Entity
 @Table(name = "t_uc_role",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"corp_code", "roleName"})})
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"corpCode", "roleName"})})
 public class Role extends BaseModel {
     /**
      * 角色类型
@@ -45,11 +48,13 @@ public class Role extends BaseModel {
     /**
      * 角色名称
      */
+    @Column(nullable = false, length = 50)
     private String roleName;
 
     /**
      * 角色描述
      */
+    @Column(nullable = false, length = 50)
     private String comments;
 
     /**
@@ -94,5 +99,13 @@ public class Role extends BaseModel {
 
     public void setRoleType(RoleType roleType) {
         this.roleType = roleType;
+    }
+
+    public List<Authority> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(List<Authority> authorities) {
+        this.authorities = authorities;
     }
 }

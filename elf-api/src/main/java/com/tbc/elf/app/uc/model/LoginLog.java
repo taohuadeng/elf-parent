@@ -7,8 +7,12 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
- * Created by Administrator on 2016/2/23.
+ * 登录日志信息实体
+ *
+ * @author ELF@TEAM
+ * @since 2016年2月23日17:03:00
  */
+@Entity
 @Table(name = "t_uc_login_log")
 public class LoginLog extends BaseModel {
 

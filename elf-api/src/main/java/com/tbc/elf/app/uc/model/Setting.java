@@ -3,12 +3,17 @@ package com.tbc.elf.app.uc.model;
 import com.tbc.elf.base.model.BaseModel;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * 系统设置实体
+ *
+ * @author ELF@TEAM
+ * @since 2016年2月23日17:03:00
  */
-@Entity
 @Table(name = "t_uc_setting")
 public class Setting extends BaseModel {
 

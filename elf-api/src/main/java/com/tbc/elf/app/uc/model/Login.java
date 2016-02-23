@@ -8,6 +8,9 @@ import java.util.Date;
 
 /**
  * 登录信息实体
+ *
+ * @author ELF@TEAM
+ * @since 2016年2月23日17:03:00
  */
 @Entity
 @Table(name = "t_uc_login")

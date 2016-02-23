@@ -1,12 +1,12 @@
 package com.tbc.elf.app.uc.model;
 
 import com.tbc.elf.base.model.BaseModel;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,6 +90,11 @@ public class Organization extends BaseModel {
     @Cascade(value = org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     @Fetch(FetchMode.SELECT)
     private List<Organization> childOrganizations = new ArrayList<Organization>();
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @Cascade(value = org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    @Fetch(FetchMode.SELECT)
+    private List<User> users = new ArrayList<User>();
 
     public String getOrganizationId() {
         return organizationId;
@@ -185,5 +190,13 @@ public class Organization extends BaseModel {
 
     public void setChildOrganizations(List<Organization> childOrganizations) {
         this.childOrganizations = childOrganizations;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 }

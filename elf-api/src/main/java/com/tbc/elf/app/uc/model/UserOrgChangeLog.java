@@ -9,7 +9,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * Created by Administrator on 2016/2/23.
+ * 用户部门更改日志表
+ *
+ * @author ELF@TEAM
+ * @since 2016年2月23日17:03:00
  */
 @Table(name = "t_uc_user_org_change_log")
 public class UserOrgChangeLog extends BaseModel {

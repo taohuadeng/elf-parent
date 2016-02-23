@@ -7,10 +7,13 @@ import javax.persistence.*;
 
 /**
  * 岗位类别实体
+ *
+ * @author ELF@TEAM
+ * @since 2016年2月23日17:03:00
  */
 @Entity
 @Table(name = "t_uc_position_category")
-public class PositionCategory extends BaseModel{
+public class PositionCategory extends BaseModel {
 
     /**
      * 岗位类别id

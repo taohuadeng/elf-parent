@@ -3,16 +3,17 @@ package com.tbc.elf.app.uc.model;
 import com.tbc.elf.base.model.BaseModel;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
- * Created by Administrator on 2016/2/23.
+ * 用户岗位信息
+ *
+ * @author ELF@TEAM
+ * @since 2016年2月23日17:03:00
  */
-@Table(name="t_uc_position")
-public class Position extends BaseModel{
+@Entity
+@Table(name = "t_uc_position")
+public class Position extends BaseModel {
 
     /**
      * 主键
@@ -43,12 +44,12 @@ public class Position extends BaseModel{
     /**
      * 职务id
      */
-    @Column( length = 32)
+    @Column(length = 32)
     private String dutyId;
     /**
      * 岗位序列id
      */
-    @Column( length = 32)
+    @Column(length = 32)
     private String positionLineId;
     /**
      * 岗位类别id

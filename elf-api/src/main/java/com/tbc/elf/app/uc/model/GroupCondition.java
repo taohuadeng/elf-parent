@@ -2,18 +2,17 @@ package com.tbc.elf.app.uc.model;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
- * Created by Administrator on 2016/2/23.
+ * 动态群组条件
+ *
+ * @author ELF@TEAM
+ * @since 2016年2月23日17:03:00
  */
+@Entity
 @Table(name = "t_uc_group_condition")
 public class GroupCondition {
-
-
     /**
      * 主键
      */
@@ -32,19 +31,19 @@ public class GroupCondition {
     /**
      * 条件区域
      */
-    @Column( length = 10)
+    @Column(length = 10)
     private String conditionCode;
 
     /**
      * 条件类型（ORGANIZATION-部门  POSITION-岗位  DUTYLEVEL-职级  RANK-级别  BIRTHDAY-出生日期）
      */
-    @Column( length = 20)
+    @Column(length = 20)
     private String conditionType;
 
     /**
      * 条件值
      */
-    @Column( length = 1300)
+    @Column(length = 1300)
     private String conditionValue;
 
     public String getGroupConditionId() {

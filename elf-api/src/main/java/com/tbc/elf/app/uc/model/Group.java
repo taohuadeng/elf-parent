@@ -8,27 +8,30 @@ import java.util.Date;
 
 /**
  * 群组信息实体
+ *
+ * @author ELF@TEAM
+ * @since 2016年2月23日17:03:00
  */
 @Entity
 @Table(name = "t_uc_group")
-public class Group extends BaseModel{
+public class Group extends BaseModel {
 
     /**
      * 群组状态枚举
      */
-    public enum GroupStatus{
-        ACTIVE,INIT,INACTIVE;
+    public enum GroupStatus {
+        ACTIVE, INIT, INACTIVE;
 
         private String text;
 
-        private GroupStatus(){
+        private GroupStatus() {
         }
 
-        private GroupStatus(String text){
+        private GroupStatus(String text) {
             this.text = text;
         }
 
-        public String getText(){
+        public String getText() {
             return text;
         }
     }
@@ -36,19 +39,19 @@ public class Group extends BaseModel{
     /**
      * 验证类型
      */
-    public enum ValidateType{
-        OPEN,DYNAMIC,APPOINT,VALIDATE;
+    public enum ValidateType {
+        OPEN, DYNAMIC, APPOINT, VALIDATE;
 
         private String text;
 
-        private ValidateType(){
+        private ValidateType() {
         }
 
-        private ValidateType(String text){
+        private ValidateType(String text) {
             this.text = text;
         }
 
-        public String getText(){
+        public String getText() {
             return text;
         }
     }
