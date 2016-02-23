@@ -6,10 +6,12 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * Created by Administrator on 2016/2/23.
  */
+@Table(name="t_uc_position")
 public class Position extends BaseModel{
 
     /**
