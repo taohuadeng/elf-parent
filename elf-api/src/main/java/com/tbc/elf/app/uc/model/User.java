@@ -23,143 +23,223 @@ public class User extends BaseModel {
     @GenericGenerator(name = "hibernate-uuid", strategy = "uuid")
     private String userId;
 
+	/**
+	 * 姓名
+	 */
+    @Column(nullable = false, length = 50)
+	private String userName;
+
+	/**
+	 * 工号
+	 */
+    @Column(nullable = false, length = 50)
+	private String employeeCode;
+
+	/**
+	 * 直属部门id
+	 */
+    @Column(nullable = false, length = 32)
+	private String organizationId;
+
     /**
-     * 姓名
+     * 直属部门 名称
      */
+    @Column(nullable = false, length = 50)
+    private String organizationName;
+	/**
+	 * 显示顺序
+	 */
     @Column(nullable = false)
-    private String userName;
+	private Double showOrder;
+
+	/**
+	 * 岗位id
+	 */
+    @Column( length = 32)
+	private String positionId;
+
+	/**
+	 * 岗位
+	 */
+    @Column( length = 50)
+	private String positionName;
+
+	/**
+	 * 职级
+	 */
+    @Column(length = 10)
+	private String dutyLevel;
+
+	/**
+	 * 职务名称
+	 */
+    @Column(length = 50)
+	private String dutyName;
+	/**
+	 * 隶属上级ID
+	 */
+    @Column(length = 32)
+	private String superiorId;
 
     /**
-     * 工号
+     * 用户状态
      */
-    @Column(nullable = false)
-    private String employeeCode;
+    @Column(nullable = false, length = 10)
+	private String accountStatus;
 
     /**
-     * 直属部门id
+     * 身份证号码
      */
-    private String organizeId;
+    @Column(length = 20)
+    private String idCard;
 
     /**
-     * 显示顺序
+     * 手机号码
      */
-    private Double showOrder;
+    @Column( length = 20)
+    private String mobile;
 
     /**
-     * 职务名称
+     * 邮箱
      */
-    private String dutyName;
+    @Column( length = 50)
+    private String email;
 
-    /**
-     * 隶属上级ID
-     */
-    private String superiorId;
-    /**
-     * 隶属上级名称
-     */
-    private String superiorName;
-
-    private String superiorEmployeeCode;
-    /**
-     * 职级
-     */
-    private String dutyLevel;
-    /**
-     * 旧职级
-     */
-    private String dutyLevelOld;
-    /**
-     * 岗位
-     */
-    private String positionName;
-    /**
-     * 部门名称
-     */
-    private String organizeName;
-    /**
-     * 岗位id
-     */
-    private String positionId;
     /**
      * 帐号过期时间,
      * 为空时表示该公司无学员过期设置
      * 或者该学员不会自动过期,公司admin账户该字段为空
      */
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column
     private Date expireTime;
 
-    /**
-     * 标签名称
-     */
-    private String tagName;
-    /**
-     * 学员角色ID (不做持久化)
-     */
-    private String userRoleId;
-    /**
-     * 学员角色名称 (不做持久化)
-     */
-    private String userRoleName;
-    /**
-     * 群组ID（不做持久化   作为查询条件）
-     */
-    private String groupId;
-    /**
-     * 群组Ids
-     */
-    private String groupIds;
-    private String groupIdsOld;
-    /**
-     * 群组Names
-     */
-    private String groupNames;
-    private String categoryNames;
+    public String getUserId() {
+        return userId;
+    }
 
-    /**
-     * 部门名称PATH
-     */
-    private String organizeNamePath;
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
-    /**
-     * 和organizeId同效（冗余属性 findUserBySearch中调用）
-     */
-    private String orgId;
+    public String getUserName() {
+        return userName;
+    }
 
-    /**
-     * 是否按当前人员的授权部门进行查询
-     */
-    private Boolean isAuthorization;
-    /**
-     * 是否查询管理员角色的人员
-     */
-    private Boolean returnAdmin;
-    /**
-     * 学员所属组织编号，不做持久化
-     */
-    private String organizeCode;
-    /**
-     * 所属岗位编号，不做持久化
-     */
-    private String positionCode;
-    /**
-     * 岗位path
-     */
-    private String positionNamePath;
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
+    public String getEmployeeCode() {
+        return employeeCode;
+    }
 
-    private String creatUserTime;
+    public void setEmployeeCode(String employeeCode) {
+        this.employeeCode = employeeCode;
+    }
 
-    private String optType;
-    //修改导入用到（不持久化）
-    private String accountStatus;
-    //导入用到（不持久化）
-    private String passwordTemp;
+    public String getOrganizationId() {
+        return organizationId;
+    }
 
-    //private GroupJoinReq groupJoinReq;
+    public void setOrganizationId(String organizationId) {
+        this.organizationId = organizationId;
+    }
 
-    private String loginName;
-    private String idCard;
-    private String nickName;
-    private Date joinGroupTime;
-    private Date joinGroupTimeTo;
+    public String getOrganizationName() {
+        return organizationName;
+    }
+
+    public void setOrganizationName(String organizationName) {
+        this.organizationName = organizationName;
+    }
+
+    public Double getShowOrder() {
+        return showOrder;
+    }
+
+    public void setShowOrder(Double showOrder) {
+        this.showOrder = showOrder;
+    }
+
+    public String getPositionId() {
+        return positionId;
+    }
+
+    public void setPositionId(String positionId) {
+        this.positionId = positionId;
+    }
+
+    public String getPositionName() {
+        return positionName;
+    }
+
+    public void setPositionName(String positionName) {
+        this.positionName = positionName;
+    }
+
+    public String getDutyLevel() {
+        return dutyLevel;
+    }
+
+    public void setDutyLevel(String dutyLevel) {
+        this.dutyLevel = dutyLevel;
+    }
+
+    public String getDutyName() {
+        return dutyName;
+    }
+
+    public void setDutyName(String dutyName) {
+        this.dutyName = dutyName;
+    }
+
+    public String getSuperiorId() {
+        return superiorId;
+    }
+
+    public void setSuperiorId(String superiorId) {
+        this.superiorId = superiorId;
+    }
+
+    public String getAccountStatus() {
+        return accountStatus;
+    }
+
+    public void setAccountStatus(String accountStatus) {
+        this.accountStatus = accountStatus;
+    }
+
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public void setIdCard(String idCard) {
+        this.idCard = idCard;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Date getExpireTime() {
+        return expireTime;
+    }
+
+    public void setExpireTime(Date expireTime) {
+        this.expireTime = expireTime;
+    }
 
 }
