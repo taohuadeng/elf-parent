@@ -1,5 +1,6 @@
 package com.tbc.elf.app.uc.model;
 
+import com.tbc.elf.base.model.BaseModel;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -10,7 +11,47 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "t_uc_group")
-public class Group {
+public class Group extends BaseModel{
+
+    /**
+     * 群组状态枚举
+     */
+    public enum GroupStatus{
+        ACTIVE,INIT,INACTIVE;
+
+        private String text;
+
+        private GroupStatus(){
+        }
+
+        private GroupStatus(String text){
+            this.text = text;
+        }
+
+        public String getText(){
+            return text;
+        }
+    }
+
+    /**
+     * 验证类型
+     */
+    public enum ValidateType{
+        OPEN,DYNAMIC,APPOINT,VALIDATE;
+
+        private String text;
+
+        private ValidateType(){
+        }
+
+        private ValidateType(String text){
+            this.text = text;
+        }
+
+        public String getText(){
+            return text;
+        }
+    }
 
     /**
      * 群组id
@@ -62,6 +103,7 @@ public class Group {
      * 群状态
      */
     @Column(nullable = false, length = 32)
+    @Enumerated(EnumType.STRING)
     private GroupStatus status;
 
     /**
@@ -81,6 +123,7 @@ public class Group {
      * 身份验证
      */
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private ValidateType validateType;
 
     /**
@@ -212,15 +255,4 @@ public class Group {
     public void setIcon(String icon) {
         this.icon = icon;
     }
-}
-
-/**
- * 群组状态枚举
- */
-enum GroupStatus{
-    ACTIVE,INIT,INACTIVE
-}
-
-enum ValidateType{
-    OPEN,DYNAMIC,APPOINT,VALIDATE
 }

@@ -1,5 +1,6 @@
 package com.tbc.elf.app.uc.model;
 
+import com.tbc.elf.base.model.BaseModel;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -9,7 +10,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "t_uc_position_category")
-public class PositionCategory {
+public class PositionCategory extends BaseModel{
 
     /**
      * 岗位类别id
