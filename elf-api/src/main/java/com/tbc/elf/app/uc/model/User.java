@@ -50,7 +50,7 @@ public class User extends BaseModel {
 	 * 显示顺序
 	 */
     @Column(nullable = false)
-	private Double showOrder;
+	private double showOrder;
 
 	/**
 	 * 岗位id
@@ -154,11 +154,11 @@ public class User extends BaseModel {
         this.organizationName = organizationName;
     }
 
-    public Double getShowOrder() {
+    public double getShowOrder() {
         return showOrder;
     }
 
-    public void setShowOrder(Double showOrder) {
+    public void setShowOrder(double showOrder) {
         this.showOrder = showOrder;
     }
 
