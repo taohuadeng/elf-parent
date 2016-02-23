@@ -1,18 +1,16 @@
-package com.tbc.elf.app.uc;
+package com.tbc.elf.app.uc.model;
 
 import com.tbc.elf.base.model.BaseModel;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.Map;
 
 /**
- * Created by Administrator on 16-2-23.
+ * 人员信息实体
  */
+@Entity
 @Table(name = "t_uc_user")
 public class User extends BaseModel {
 
@@ -75,10 +73,6 @@ public class User extends BaseModel {
      */
     private String positionName;
     /**
-     * 最后修改人
-     */
-    private String lastModifyBy;
-    /**
      * 部门名称
      */
     private String organizeName;
@@ -119,10 +113,6 @@ public class User extends BaseModel {
      */
     private String groupNames;
     private String categoryNames;
-    /**
-     * 扩展字段
-     */
-    private Map<String, Object> extMap;
 
     /**
      * 部门名称PATH

@@ -11,6 +11,13 @@
     <name>elf Maven Webapp</name>
     <url>http://maven.apache.org</url>
     <dependencies>
+
+        <dependency>
+            <groupId>com.tbc.elf</groupId>
+            <artifactId>elf-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
         <!--jetty启动最少依赖开始-->
         <dependency>
             <groupId>org.mortbay.jetty</groupId>
@@ -145,8 +152,7 @@
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-annotations</artifactId>
-            <version>3.5.6-Final</version>
+            <artifactId>hibernate-commons-annotations</artifactId>
         </dependency>
         <dependency>
             <groupId>commons-dbcp</groupId>
