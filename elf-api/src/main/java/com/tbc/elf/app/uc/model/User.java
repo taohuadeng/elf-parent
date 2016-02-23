@@ -1,18 +1,41 @@
 package com.tbc.elf.app.uc.model;
 
 import com.tbc.elf.base.model.BaseModel;
-import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
- * 人员信息实体
+ * 系统权限表
+ *
+ * @author ELF@TEAM
+ * @since 2016年2月23日17:03:00
  */
 @Entity
 @Table(name = "t_uc_user")
 public class User extends BaseModel {
+    /**
+     * 用户性别类型
+     */
+    public enum SexType {
+        MALE("男"), FEMALE("女"), SECRECY("保密");
+        private final String text;
+
+        private SexType(String text) {
+            this.text = text;
+        }
+
+        public String getText() {
+            return text;
+        }
+    }
 
     /**
      * 主键
@@ -23,69 +46,87 @@ public class User extends BaseModel {
     @GenericGenerator(name = "hibernate-uuid", strategy = "uuid")
     private String userId;
 
-	/**
-	 * 姓名
-	 */
+    /**
+     * 姓名
+     */
     @Column(nullable = false, length = 50)
-	private String userName;
+    private String userName;
 
-	/**
-	 * 工号
-	 */
+    /**
+     * 角色类型
+     */
+    @Column(nullable = false, length = 10)
+    @Enumerated(EnumType.STRING)
+    private SexType sex;
+
+    /**
+     * 工号
+     */
     @Column(nullable = false, length = 50)
-	private String employeeCode;
+    private String employeeCode;
 
-	/**
-	 * 直属部门id
-	 */
+    /**
+     * 直属部门id
+     */
     @Column(nullable = false, length = 32)
-	private String organizationId;
+    private String organizationId;
 
     /**
      * 直属部门 名称
      */
     @Column(nullable = false, length = 50)
     private String organizationName;
-	/**
-	 * 显示顺序
-	 */
+
+    /**
+     * 显示顺序
+     */
     @Column(nullable = false)
-	private double showOrder;
+    private double showOrder;
 
-	/**
-	 * 岗位id
-	 */
-    @Column( length = 32)
-	private String positionId;
-
-	/**
-	 * 岗位
-	 */
-    @Column( length = 50)
-	private String positionName;
-
-	/**
-	 * 职级
-	 */
-    @Column(length = 10)
-	private String dutyLevel;
-
-	/**
-	 * 职务名称
-	 */
-    @Column(length = 50)
-	private String dutyName;
-	/**
-	 * 隶属上级ID
-	 */
+    /**
+     * 岗位id
+     */
     @Column(length = 32)
-	private String superiorId;
+    private String positionId;
+
+    /**
+     * 岗位
+     */
+    @Column(length = 50)
+    private String positionName;
+
+    /**
+     * 职级
+     */
+    @Column(length = 10)
+    private String dutyLevel;
+
+    /**
+     * 职务名称
+     */
+    @Column(length = 50)
+    private String dutyName;
+
+    /**
+     * 隶属上级ID
+     */
+    @Column(length = 32)
+    private String superiorId;
 
     /**
      * 用户状态
      */
     @Column(nullable = false, length = 10)
-	private String accountStatus;
+    private String accountStatus;
+
+    /**
+     * 帐号过期时间,
+     * 为空时表示该公司无学员过期设置
+     * 或者该学员不会自动过期,公司admin账户该字段为空
+     */
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date expireTime;
 
     /**
      * 身份证号码
@@ -96,23 +137,30 @@ public class User extends BaseModel {
     /**
      * 手机号码
      */
-    @Column( length = 20)
+    @Column(length = 20)
     private String mobile;
 
     /**
      * 邮箱
      */
-    @Column( length = 50)
+    @Column(length = 50)
     private String email;
 
     /**
-     * 帐号过期时间,
-     * 为空时表示该公司无学员过期设置
-     * 或者该学员不会自动过期,公司admin账户该字段为空
+     * 机构List
      */
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column
-    private Date expireTime;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @Cascade(value = org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    @Fetch(FetchMode.SELECT)
+    private List<Organization> organizations = new ArrayList<Organization>();
+
+    /**
+     * 角色List
+     */
+    @ManyToMany(fetch = FetchType.EAGER)
+    @Cascade(value = org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    @Fetch(FetchMode.SELECT)
+    public List<Role> roles = new ArrayList<Role>();
 
     public String getUserId() {
         return userId;
@@ -128,6 +176,14 @@ public class User extends BaseModel {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public SexType getSex() {
+        return sex;
+    }
+
+    public void setSex(SexType sex) {
+        this.sex = sex;
     }
 
     public String getEmployeeCode() {
@@ -242,4 +298,19 @@ public class User extends BaseModel {
         this.expireTime = expireTime;
     }
 
+    public List<Organization> getOrganizations() {
+        return organizations;
+    }
+
+    public void setOrganizations(List<Organization> organizations) {
+        this.organizations = organizations;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
 }
