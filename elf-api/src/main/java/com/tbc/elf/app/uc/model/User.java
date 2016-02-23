@@ -147,14 +147,6 @@ public class User extends BaseModel {
     private String email;
 
     /**
-     * 机构List
-     */
-    @ManyToMany(fetch = FetchType.EAGER)
-    @Cascade(value = org.hibernate.annotations.CascadeType.SAVE_UPDATE)
-    @Fetch(FetchMode.SELECT)
-    private List<Organization> organizations = new ArrayList<Organization>();
-
-    /**
      * 角色List
      */
     @ManyToMany(fetch = FetchType.EAGER)
@@ -296,14 +288,6 @@ public class User extends BaseModel {
 
     public void setExpireTime(Date expireTime) {
         this.expireTime = expireTime;
-    }
-
-    public List<Organization> getOrganizations() {
-        return organizations;
-    }
-
-    public void setOrganizations(List<Organization> organizations) {
-        this.organizations = organizations;
     }
 
     public List<Role> getRoles() {

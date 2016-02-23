@@ -3,17 +3,17 @@ package com.tbc.elf.app.uc.model;
 import com.tbc.elf.base.model.BaseModel;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
- * Created by Administrator on 2016/2/23.
+ * 群组成员实体
+ *
+ * @author ELF@TEAM
+ * @since 2016年2月23日17:03:00
  */
-
-@Table(name="t_uc_group_member")
-public class GroupMember extends BaseModel{
+@Entity
+@Table(name = "t_uc_group_member")
+public class GroupMember extends BaseModel {
 
     /**
      * 主键
@@ -22,48 +22,48 @@ public class GroupMember extends BaseModel{
     @Column(nullable = false, length = 32)
     @GeneratedValue(generator = "hibernate-uuid")
     @GenericGenerator(name = "hibernate-uuid", strategy = "uuid")
-	private String groupMemberId;
+    private String groupMemberId;
 
-	/**
-	 * 群主键
-	 */
+    /**
+     * 群主键
+     */
     @Column(nullable = false, length = 32)
-	private String groupId;
+    private String groupId;
 
-	/**
-	 * 关联的id，根据类型
-	 */
-     @Column(nullable = false, length = 32)
-	private String referId;
+    /**
+     * 关联的id，根据类型
+     */
+    @Column(nullable = false, length = 32)
+    private String referId;
 
-	/**
-	 * 关联的类型, ORGANIZATION:组织,POSITION:岗位,USER:用户
-	 */
-     @Column(nullable = false, length = 20)
-	private String referType;
-	/**
-	 * 来源
-	 */
+    /**
+     * 关联的类型, ORGANIZATION:组织,POSITION:岗位,USER:用户
+     */
     @Column(nullable = false, length = 20)
-	private String memberSource;
+    private String referType;
+    /**
+     * 来源
+     */
+    @Column(nullable = false, length = 20)
+    private String memberSource;
 
-	/**
-	 *如果referType是岗位就在这个列中加这个岗位所在的部门ID
-	 */
+    /**
+     * 如果referType是岗位就在这个列中加这个岗位所在的部门ID
+     */
     @Column(length = 32)
-	private String referOfOrgId;
+    private String referOfOrgId;
 
-	/**
-	 * 是否为系统管理员
-	 */
+    /**
+     * 是否为系统管理员
+     */
     @Column(nullable = false)
-	private boolean admin;
+    private boolean admin;
 
-	/**
-	 * 是否为群主
-	 */
+    /**
+     * 是否为群主
+     */
     @Column(nullable = false)
-	private Boolean owner;
+    private Boolean owner;
 
     public String getGroupMemberId() {
         return groupMemberId;

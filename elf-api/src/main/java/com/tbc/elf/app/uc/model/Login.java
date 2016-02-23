@@ -48,14 +48,9 @@ public class Login extends BaseModel {
     /**
      * 用户主键
      */
-    @Column(nullable = false, length = 32)
-    private String userId;
-
-    /**
-     * 姓名
-     */
-    @Column(nullable = false, length = 50)
-    private String userName;
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     /**
      * 登录帐号
@@ -66,8 +61,8 @@ public class Login extends BaseModel {
     /**
      * 注册时间
      */
-    @Temporal(TemporalType.TIMESTAMP)
     @Column
+    @Temporal(TemporalType.TIMESTAMP)
     private Date registerTime;
 
     /**
@@ -105,8 +100,8 @@ public class Login extends BaseModel {
     /**
      * 当前登录时间
      */
-    @Temporal(TemporalType.TIMESTAMP)
     @Column
+    @Temporal(TemporalType.TIMESTAMP)
     private Date currentLoginTime;
 
     /**
@@ -124,8 +119,8 @@ public class Login extends BaseModel {
     /**
      * 账号过期时间
      */
-    @Temporal(TemporalType.TIMESTAMP)
     @Column
+    @Temporal(TemporalType.TIMESTAMP)
     private Date accountExpireTime;
 
     /**
@@ -149,15 +144,15 @@ public class Login extends BaseModel {
     /**
      * 下此密码更新时间
      */
-    @Temporal(TemporalType.TIMESTAMP)
     @Column
+    @Temporal(TemporalType.TIMESTAMP)
     private Date nextPasswordChangeTime;
 
     /**
      * 最后一次修改密码的时间
      */
-    @Temporal(TemporalType.TIMESTAMP)
     @Column
+    @Temporal(TemporalType.TIMESTAMP)
     private Date lastPwdChangeTime;
 
     public String getLoginId() {
@@ -168,20 +163,12 @@ public class Login extends BaseModel {
         this.loginId = loginId;
     }
 
-    public String getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getLoginName() {
