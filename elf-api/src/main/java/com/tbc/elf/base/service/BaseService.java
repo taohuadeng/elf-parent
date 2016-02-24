@@ -22,11 +22,28 @@ public interface BaseService<T> {
 
     /**
      * 该方法用于根据实体主键获取实体类
+     * <p>load Hibernate load</p>
      *
      * @param modelId 实体主键
      * @return 对应实体T
      */
     T load(String modelId);
+
+    /**
+     * 该方法用于根据实体主键获取实体类
+     * <p>load Hibernate get</p>
+     *
+     * @param modelId 实体主键
+     * @return 对应实体T
+     */
+    T get(String modelId);
+
+    /**
+     * 该方法用于根据实体主键删除对应实体类
+     *
+     * @param modelId 实体主键
+     */
+    void delete(String modelId);
 
     /**
      * 根据主键更新当前实体，如果实体主键未设置，则会抛出错误。

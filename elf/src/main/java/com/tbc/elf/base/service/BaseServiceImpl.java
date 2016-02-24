@@ -36,6 +36,18 @@ public class BaseServiceImpl<T> implements BaseService<T> {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public T get(String modelId) {
+        return baseService.get(modelClass, modelId);
+    }
+
+    @Override
+    @Transactional(readOnly = false, isolation = Isolation.READ_COMMITTED)
+    public void delete(String modelId) {
+        baseService.delete(modelClass, modelId);
+    }
+
+    @Override
     public String update(T model) {
         return null;
     }
