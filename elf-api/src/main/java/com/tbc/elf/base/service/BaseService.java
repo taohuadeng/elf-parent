@@ -54,6 +54,15 @@ public interface BaseService<T> {
      */
     String update(T model);
 
+    /**
+     * 根据hql获取对应实体集合
+     *
+     * @param hql   hql语句
+     * @param value 查询参数
+     * @return 查询实体集合
+     */
+    List<T> listByHQL(String hql, Object[] value);
+
 //    /**
 //     * 根据各个实体的主键更新所有当前实体，如果实体主键未设置，则会抛出错误。
 //     * 未设置的值，会保留数据库原有值，设置的值为被更新成新值。

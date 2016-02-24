@@ -1,13 +1,9 @@
 package com.tbc.elf.app.uc.model;
 
 import com.tbc.elf.base.model.BaseModel;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 系统权限表
@@ -66,19 +62,13 @@ public class Authority extends BaseModel {
      */
     @Column(nullable = false, length = 10)
     @Enumerated(EnumType.STRING)
-    private AuthorityType authorityType;
+    private AuthorityType authorityType = AuthorityType.SYSTEM;
 
-    @ManyToOne
-    @Cascade(value = CascadeType.SAVE_UPDATE)
-    private Authority parentAuthority;
-
-    @OneToMany(mappedBy = "parentAuthority")
-    @Cascade(value = CascadeType.SAVE_UPDATE)
-    private List<Authority> childAuthorities = new ArrayList<Authority>();
-
-    @ManyToMany(mappedBy = "authorities")
-    @Cascade(value = CascadeType.SAVE_UPDATE)
-    public List<Role> roles = new ArrayList<Role>();
+    /**
+     * 父权限ID
+     */
+    @Column(nullable = false, length = 32)
+    private String parentId;
 
     public String getAuthorityId() {
         return authorityId;
@@ -120,27 +110,11 @@ public class Authority extends BaseModel {
         this.authorityType = authorityType;
     }
 
-    public Authority getParentAuthority() {
-        return parentAuthority;
+    public String getParentId() {
+        return parentId;
     }
 
-    public void setParentAuthority(Authority parentAuthority) {
-        this.parentAuthority = parentAuthority;
-    }
-
-    public List<Authority> getChildAuthorities() {
-        return childAuthorities;
-    }
-
-    public void setChildAuthorities(List<Authority> childAuthorities) {
-        this.childAuthorities = childAuthorities;
-    }
-
-    public List<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 }
