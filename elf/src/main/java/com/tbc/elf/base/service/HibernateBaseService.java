@@ -19,15 +19,15 @@ import java.util.List;
 
 @Repository
 @SuppressWarnings("unchecked")
-public class BaseService {
+public class HibernateBaseService {
     private HibernateTemplate hibernateTemplate;
 
     @Autowired
-    public BaseService(SessionFactory sessionFactory) {
+    public HibernateBaseService(SessionFactory sessionFactory) {
         this.hibernateTemplate = new HibernateTemplate(sessionFactory);
     }
 
-    public BaseService() {
+    public HibernateBaseService() {
     }
 
     public Session getSession() {

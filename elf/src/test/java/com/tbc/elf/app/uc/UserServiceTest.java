@@ -3,9 +3,10 @@ package com.tbc.elf.app.uc;
 import com.tbc.elf.app.uc.model.User;
 import com.tbc.elf.app.uc.service.UserService;
 import com.tbc.elf.base.BaseTests;
-import com.tbc.elf.base.service.BaseService;
+import com.tbc.elf.base.service.HibernateBaseService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.Assert;
 import org.junit.Test;
 
 import javax.annotation.Resource;
@@ -17,7 +18,7 @@ import java.util.Date;
 public class UserServiceTest extends BaseTests {
     private Log LOG = LogFactory.getLog(UserServiceTest.class);
     @Resource
-    private BaseService baseService;
+    private HibernateBaseService baseService;
     @Resource
     private UserService userService;
 
@@ -36,7 +37,7 @@ public class UserServiceTest extends BaseTests {
         user.setEmployeeCode("001");
         user.setOrganizationId("");
         user.setOrganizationName("");
-        user.setAccountStatus(User.AccountStatus.ENABLE);
+        user.setAccountStatus("ENABLE");
         user.setCorpCode("default");
         user.setCreateBy("sdf");
         user.setCreateTime(new Date());
@@ -44,4 +45,12 @@ public class UserServiceTest extends BaseTests {
         user.setLastModifyTime(new Date());
         userService.save(user);
     }
+
+    @Test
+    public void testLoadUser() {
+        User user = userService.load("40288111531138220153113834010000");
+        Assert.assertNotNull(user);
+        LOG.info(user.getUserName());
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.tbc.elf.app.uc.service;
 
 import com.tbc.elf.app.uc.model.User;
+import com.tbc.elf.base.service.BaseService;
 
 /**
  * 人员信息的业务逻辑操作
@@ -8,13 +9,7 @@ import com.tbc.elf.app.uc.model.User;
  * @author ELF@TEAM
  * @since 2016年2月23日17:03:00
  */
-public interface UserService {
+public interface UserService extends BaseService<User> {
 
-    /**
-     * 该方法用于人员的新增操作
-     *
-     * @return 用户主键
-     * @since 2016年2月24日09:32:00
-     */
-    String save(User user);
+
 }
