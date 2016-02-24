@@ -38,6 +38,23 @@ public class User extends BaseModel {
     }
 
     /**
+     * 账户状态
+     */
+    public enum AccountStatus {
+        UNAPPROVED("未审批"),ENABLE("启用"),FORBIDDEN("禁用");
+
+        private final String text;
+
+        private AccountStatus(String text) {
+            this.text = text;
+        }
+
+        public String getText() {
+            return text;
+        }
+    }
+
+    /**
      * 主键
      */
     @Id
@@ -110,7 +127,7 @@ public class User extends BaseModel {
      * 用户状态
      */
     @Column(nullable = false, length = 10)
-    private String accountStatus;
+    private AccountStatus accountStatus;
 
     /**
      * 帐号过期时间,
@@ -235,11 +252,11 @@ public class User extends BaseModel {
         this.superiorId = superiorId;
     }
 
-    public String getAccountStatus() {
+    public AccountStatus getAccountStatus() {
         return accountStatus;
     }
 
-    public void setAccountStatus(String accountStatus) {
+    public void setAccountStatus(AccountStatus accountStatus) {
         this.accountStatus = accountStatus;
     }
 
