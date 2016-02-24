@@ -98,8 +98,8 @@ public class Group extends BaseModel {
     /**
      * 过期时间
      */
-    @Temporal(TemporalType.TIMESTAMP)
     @Column
+    @Temporal(TemporalType.TIMESTAMP)
     private Date expiredTime;
 
     /**

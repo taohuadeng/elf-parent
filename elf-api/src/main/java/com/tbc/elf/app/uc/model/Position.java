@@ -1,9 +1,13 @@
 package com.tbc.elf.app.uc.model;
 
 import com.tbc.elf.base.model.BaseModel;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * 用户岗位信息
@@ -41,21 +45,29 @@ public class Position extends BaseModel {
      */
     @Column(length = 32)
     private String dutyArchitectureId;
+
     /**
      * 职务id
      */
     @Column(length = 32)
     private String dutyId;
+
     /**
      * 岗位序列id
      */
     @Column(length = 32)
     private String positionLineId;
-    /**
-     * 岗位类别id
-     */
-    @Column(nullable = false, length = 32)
-    private String positionCategoryId;
+
+    @OneToMany(mappedBy = "position", fetch = FetchType.EAGER)
+    @Cascade(value = org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    @Fetch(FetchMode.SELECT)
+    private List<User> users;
+
+    @ManyToOne
+    @JoinColumn(name = "position_category_id")
+    @Cascade(value = org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    @Fetch(FetchMode.SELECT)
+    private PositionCategory category;
 
     public String getPositionId() {
         return positionId;
@@ -105,12 +117,20 @@ public class Position extends BaseModel {
         this.positionLineId = positionLineId;
     }
 
-    public String getPositionCategoryId() {
-        return positionCategoryId;
+    public List<User> getUsers() {
+        return users;
     }
 
-    public void setPositionCategoryId(String positionCategoryId) {
-        this.positionCategoryId = positionCategoryId;
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
+
+    public PositionCategory getCategory() {
+        return category;
+    }
+
+    public void setCategory(PositionCategory category) {
+        this.category = category;
     }
 }
 

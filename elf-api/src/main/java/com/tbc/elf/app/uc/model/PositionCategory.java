@@ -1,9 +1,13 @@
 package com.tbc.elf.app.uc.model;
 
 import com.tbc.elf.base.model.BaseModel;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * 岗位类别实体
@@ -54,6 +58,11 @@ public class PositionCategory extends BaseModel {
     @Column
     private double showOrder;
 
+    @OneToMany(fetch = FetchType.EAGER)
+    @Cascade(value = org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    @Fetch(FetchMode.SELECT)
+    private List<Position> positions;
+
     public String getPositionCategoryId() {
         return positionCategoryId;
     }
@@ -100,5 +109,13 @@ public class PositionCategory extends BaseModel {
 
     public void setShowOrder(double showOrder) {
         this.showOrder = showOrder;
+    }
+
+    public List<Position> getPositions() {
+        return positions;
+    }
+
+    public void setPositions(List<Position> positions) {
+        this.positions = positions;
     }
 }

@@ -93,8 +93,8 @@ public class Login extends BaseModel {
     /**
      * 上次登录时间
      */
-    @Temporal(TemporalType.TIMESTAMP)
     @Column
+    @Temporal(TemporalType.TIMESTAMP)
     private Date lastLoginTime;
 
     /**

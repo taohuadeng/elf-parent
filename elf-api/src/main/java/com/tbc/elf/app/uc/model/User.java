@@ -83,17 +83,10 @@ public class User extends BaseModel {
     @Column(nullable = false)
     private double showOrder;
 
-    /**
-     * 岗位id
-     */
-    @Column(length = 32)
-    private String positionId;
-
-    /**
-     * 岗位
-     */
-    @Column(length = 50)
-    private String positionName;
+    @ManyToOne
+    @JoinColumn(name = "position_id")
+    @Cascade(value = org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    private Position position;
 
     /**
      * 职级
@@ -210,20 +203,12 @@ public class User extends BaseModel {
         this.showOrder = showOrder;
     }
 
-    public String getPositionId() {
-        return positionId;
+    public Position getPosition() {
+        return position;
     }
 
-    public void setPositionId(String positionId) {
-        this.positionId = positionId;
-    }
-
-    public String getPositionName() {
-        return positionName;
-    }
-
-    public void setPositionName(String positionName) {
-        this.positionName = positionName;
+    public void setPosition(Position position) {
+        this.position = position;
     }
 
     public String getDutyLevel() {

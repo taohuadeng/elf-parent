@@ -91,10 +91,10 @@ public class Organization extends BaseModel {
     @Fetch(FetchMode.SELECT)
     private List<Organization> childOrganizations = new ArrayList<Organization>();
 
-    @OneToMany(fetch = FetchType.EAGER)
+    /*@OneToMany(fetch = FetchType.EAGER)
     @Cascade(value = org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     @Fetch(FetchMode.SELECT)
-    private List<User> users = new ArrayList<User>();
+    private List<User> users = new ArrayList<User>();*/
 
     public String getOrganizationId() {
         return organizationId;
@@ -192,11 +192,11 @@ public class Organization extends BaseModel {
         this.childOrganizations = childOrganizations;
     }
 
-    public List<User> getUsers() {
+    /*public List<User> getUsers() {
         return users;
     }
 
     public void setUsers(List<User> users) {
         this.users = users;
-    }
+    }*/
 }
