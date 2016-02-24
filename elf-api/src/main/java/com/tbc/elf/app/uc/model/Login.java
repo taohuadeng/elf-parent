@@ -48,9 +48,8 @@ public class Login extends BaseModel {
     /**
      * 用户主键
      */
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(nullable = false, length = 32)
+    private String userId;
 
     /**
      * 登录帐号
@@ -163,12 +162,12 @@ public class Login extends BaseModel {
         this.loginId = loginId;
     }
 
-    public User getUser() {
-        return user;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getLoginName() {

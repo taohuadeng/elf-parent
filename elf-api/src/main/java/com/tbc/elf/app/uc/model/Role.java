@@ -1,14 +1,9 @@
 package com.tbc.elf.app.uc.model;
 
 import com.tbc.elf.base.model.BaseModel;
-import org.hibernate.annotations.*;
-import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 系统角色表
@@ -64,11 +59,6 @@ public class Role extends BaseModel {
     @Enumerated(EnumType.STRING)
     private RoleType roleType;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @Cascade(value = CascadeType.SAVE_UPDATE)
-    @Fetch(FetchMode.SELECT)
-    public List<Authority> authorities = new ArrayList<Authority>();
-
     public String getRoleId() {
         return roleId;
     }
@@ -99,13 +89,5 @@ public class Role extends BaseModel {
 
     public void setRoleType(RoleType roleType) {
         this.roleType = roleType;
-    }
-
-    public List<Authority> getAuthorities() {
-        return authorities;
-    }
-
-    public void setAuthorities(List<Authority> authorities) {
-        this.authorities = authorities;
     }
 }

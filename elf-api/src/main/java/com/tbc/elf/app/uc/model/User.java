@@ -1,16 +1,10 @@
 package com.tbc.elf.app.uc.model;
 
 import com.tbc.elf.base.model.BaseModel;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 系统权限表
@@ -41,7 +35,7 @@ public class User extends BaseModel {
      * 账户状态
      */
     public enum AccountStatus {
-        UNAPPROVED("未审批"),ENABLE("启用"),FORBIDDEN("禁用");
+        UNAPPROVED("未审批"), ENABLE("启用"), FORBIDDEN("禁用");
 
         private final String text;
 
@@ -100,10 +94,17 @@ public class User extends BaseModel {
     @Column(nullable = false)
     private double showOrder;
 
-    @ManyToOne
-    @JoinColumn(name = "position_id")
-    @Cascade(value = org.hibernate.annotations.CascadeType.SAVE_UPDATE)
-    private Position position;
+    /**
+     * 岗位ID
+     */
+    @Column(length = 32)
+    private String positionId;
+
+    /**
+     * 岗位名称
+     */
+    @Column(length = 50)
+    private String positionName;
 
     /**
      * 职级
@@ -155,14 +156,6 @@ public class User extends BaseModel {
      */
     @Column(length = 50)
     private String email;
-
-    /**
-     * 角色List
-     */
-    @ManyToMany(fetch = FetchType.EAGER)
-    @Cascade(value = org.hibernate.annotations.CascadeType.SAVE_UPDATE)
-    @Fetch(FetchMode.SELECT)
-    public List<Role> roles = new ArrayList<Role>();
 
     public String getUserId() {
         return userId;
@@ -220,12 +213,20 @@ public class User extends BaseModel {
         this.showOrder = showOrder;
     }
 
-    public Position getPosition() {
-        return position;
+    public String getPositionId() {
+        return positionId;
     }
 
-    public void setPosition(Position position) {
-        this.position = position;
+    public void setPositionId(String positionId) {
+        this.positionId = positionId;
+    }
+
+    public String getPositionName() {
+        return positionName;
+    }
+
+    public void setPositionName(String positionName) {
+        this.positionName = positionName;
     }
 
     public String getDutyLevel() {
@@ -290,13 +291,5 @@ public class User extends BaseModel {
 
     public void setExpireTime(Date expireTime) {
         this.expireTime = expireTime;
-    }
-
-    public List<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
     }
 }
