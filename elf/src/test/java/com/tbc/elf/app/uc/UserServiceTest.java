@@ -4,10 +4,12 @@ import com.tbc.elf.app.uc.model.User;
 import com.tbc.elf.app.uc.service.UserService;
 import com.tbc.elf.base.BaseTests;
 import com.tbc.elf.base.service.HibernateBaseService;
+import com.tbc.elf.common.service.RedisService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
 import org.junit.Test;
+import redis.clients.jedis.JedisCommands;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -21,10 +23,12 @@ public class UserServiceTest extends BaseTests {
     private HibernateBaseService baseService;
     @Resource
     private UserService userService;
+    @Resource
+    private RedisService redisService;
 
     @Test
     public void testHello() {
-        String hql ="from User";
+        String hql = "from User";
         User user = baseService.getByHQL(hql);
         LOG.info("Hello ELF TESTS!");
     }
@@ -37,7 +41,7 @@ public class UserServiceTest extends BaseTests {
         user.setEmployeeCode("001");
         user.setOrganizationId("");
         user.setOrganizationName("");
-        user.setAccountStatus("ENABLE");
+        user.setAccountStatus(User.AccountStatus.ENABLE);
         user.setCorpCode("default");
         user.setCreateBy("sdf");
         user.setCreateTime(new Date());
@@ -53,4 +57,9 @@ public class UserServiceTest extends BaseTests {
         LOG.info(user.getUserName());
     }
 
+    @Test
+    public void testJedis() {
+        String name = redisService.get("name");
+        LOG.info(name);
+    }
 }
