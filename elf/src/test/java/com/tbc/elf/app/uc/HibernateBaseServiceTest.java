@@ -1,5 +1,6 @@
-package com.tbc.elf.base;
+package com.tbc.elf.app.uc;
 
+import com.tbc.elf.base.BaseTests;
 import com.tbc.elf.base.service.HibernateBaseService;
 import com.tbc.elf.base.util.HqlBuilder;
 import org.apache.commons.logging.Log;

@@ -341,12 +341,14 @@ public class HibernateBaseService {
             }
         }
 
-        if (hqlBuilder.getFirstRecordIndex() != null) {
-            query.setFirstResult(hqlBuilder.getFirstRecordIndex());
+        Integer firstRecordIndex = hqlBuilder.getFirstRecordIndex();
+        if (firstRecordIndex != null && firstRecordIndex >= 0) {
+            query.setFirstResult(firstRecordIndex);
         }
 
-        if (hqlBuilder.getMaxRecordNum() != null) {
-            query.setMaxResults(hqlBuilder.getMaxRecordNum());
+        Integer maxRecordNum = hqlBuilder.getMaxRecordNum();
+        if (maxRecordNum != null && maxRecordNum > 0) {
+            query.setMaxResults(maxRecordNum);
         }
 
     }
