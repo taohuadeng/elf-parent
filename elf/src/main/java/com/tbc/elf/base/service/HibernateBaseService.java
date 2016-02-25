@@ -126,32 +126,6 @@ public class HibernateBaseService {
         return query.list();
     }
 
-    public List find(HqlBuilder hqlBuilder) {
-        Query query = this.getSession().createQuery(hqlBuilder.toString());
-
-        List<Object> parameterList = hqlBuilder.getParameterList();
-        if (CollectionUtils.isNotEmpty(parameterList)) {
-            for (int i = 0; i < parameterList.size(); i++) {
-                Object obj = parameterList.get(i);
-                query.setParameter(i,obj);
-            }
-        }
-
-        Map<String,Object> parameterMap = hqlBuilder.getParameterMap();
-        if (MapUtils.isNotEmpty(parameterMap)) {
-            for (Map.Entry<String, Object> entry : parameterMap.entrySet()) {
-                String placeHolder = entry.getKey();
-                Object value = entry.getValue();
-                if (value instanceof Collection) {
-                    query.setParameterList(placeHolder, (Collection) value);
-                } else {
-                    query.setParameter(placeHolder,value);
-                }
-            }
-        }
-
-        return query.list();
-    }
 
     /**
      * 使用带参数的HSQL语句检索数据
@@ -303,6 +277,68 @@ public class HibernateBaseService {
             }
         }
         return (T) query.uniqueResult();
+    }
+
+    /**
+     * 查询一组数据
+     *
+     * @param hqlBuilder hqlBuilder
+     * @return 查询结果列表
+     */
+    public <T> List<T> queryList(HqlBuilder hqlBuilder) {
+        Query query = this.getSession().createQuery(hqlBuilder.getSql());
+        setParameter(hqlBuilder, query);
+        return query.list();
+    }
+
+    /**
+     * 查询单个数据
+     *
+     * @param hqlBuilder hqlBuilder
+     * @return 查询结果
+     */
+    public <T> T queryUniqueResult(HqlBuilder hqlBuilder) {
+        Query query = this.getSession().createQuery(hqlBuilder.getSql());
+        setParameter(hqlBuilder,query);
+        return (T) query.uniqueResult();
+    }
+
+    /**
+     * 执行更新的hql
+     *
+     * @param hqlBuilder hqlBuilder
+     * @return 返回更新数据的条数
+     */
+    public int executeUpdate(HqlBuilder hqlBuilder) {
+        Query query = this.getSession().createQuery(hqlBuilder.getSql());
+        setParameter(hqlBuilder,query);
+        return query.executeUpdate();
+    }
+
+    /*
+    设置hqlBuilder的参数
+     */
+    private void setParameter(HqlBuilder hqlBuilder, Query query) {
+        List<Object> parameterList = hqlBuilder.getParameterList();
+        if (CollectionUtils.isNotEmpty(parameterList)) {
+            for (int i = 0; i < parameterList.size(); i++) {
+                Object obj = parameterList.get(i);
+                query.setParameter(i,obj);
+            }
+        }
+
+        Map<String,Object> parameterMap = hqlBuilder.getParameterMap();
+        if (MapUtils.isNotEmpty(parameterMap)) {
+            for (Map.Entry<String, Object> entry : parameterMap.entrySet()) {
+                String placeHolder = entry.getKey();
+                Object paramValue = entry.getValue();
+                if (paramValue instanceof Collection) {
+                    query.setParameterList(placeHolder, (Collection) paramValue);
+                } else {
+                    query.setParameter(placeHolder, paramValue);
+                }
+            }
+        }
     }
 
 }
