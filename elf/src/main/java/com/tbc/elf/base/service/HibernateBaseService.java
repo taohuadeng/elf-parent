@@ -169,7 +169,7 @@ public class HibernateBaseService {
     }
 
     public <T> T merge(T model) {
-        return (T)this.getSession().merge(model);
+        return (T) this.getSession().merge(model);
     }
 
     public void saveOrUpdate(Object model) {
@@ -300,7 +300,7 @@ public class HibernateBaseService {
      */
     public <T> T queryUniqueResult(HqlBuilder hqlBuilder) {
         Query query = this.getSession().createQuery(hqlBuilder.getSql());
-        setParameter(hqlBuilder,query);
+        setParameter(hqlBuilder, query);
         return (T) query.uniqueResult();
     }
 
@@ -312,7 +312,7 @@ public class HibernateBaseService {
      */
     public int executeUpdate(HqlBuilder hqlBuilder) {
         Query query = this.getSession().createQuery(hqlBuilder.getSql());
-        setParameter(hqlBuilder,query);
+        setParameter(hqlBuilder, query);
         return query.executeUpdate();
     }
 
@@ -324,11 +324,11 @@ public class HibernateBaseService {
         if (CollectionUtils.isNotEmpty(parameterList)) {
             for (int i = 0; i < parameterList.size(); i++) {
                 Object obj = parameterList.get(i);
-                query.setParameter(i,obj);
+                query.setParameter(i, obj);
             }
         }
 
-        Map<String,Object> parameterMap = hqlBuilder.getParameterMap();
+        Map<String, Object> parameterMap = hqlBuilder.getParameterMap();
         if (MapUtils.isNotEmpty(parameterMap)) {
             for (Map.Entry<String, Object> entry : parameterMap.entrySet()) {
                 String placeHolder = entry.getKey();
@@ -340,6 +340,15 @@ public class HibernateBaseService {
                 }
             }
         }
+
+        if (hqlBuilder.getFirstRecordIndex() != null) {
+            query.setFirstResult(hqlBuilder.getFirstRecordIndex());
+        }
+
+        if (hqlBuilder.getMaxRecordNum() != null) {
+            query.setMaxResults(hqlBuilder.getMaxRecordNum());
+        }
+
     }
 
 }

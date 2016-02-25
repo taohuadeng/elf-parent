@@ -24,6 +24,8 @@ public class HqlBuilder {
     private StringBuilder builder;
     private List<Object> parameterList;
     private Map<String, Object> parameterMap;
+    private Integer firstRecordIndex;
+    private Integer maxRecordNum;
 
     public HqlBuilder() {
         super();
@@ -359,5 +361,21 @@ public class HqlBuilder {
     @Override
     public String toString() {
         return this.getSql();
+    }
+
+    public Integer getFirstRecordIndex() {
+        return firstRecordIndex;
+    }
+
+    public void setFirstRecordIndex(Integer firstRecordIndex) {
+        this.firstRecordIndex = firstRecordIndex;
+    }
+
+    public Integer getMaxRecordNum() {
+        return maxRecordNum;
+    }
+
+    public void setMaxRecordNum(Integer maxRecordNum) {
+        this.maxRecordNum = maxRecordNum;
     }
 }
