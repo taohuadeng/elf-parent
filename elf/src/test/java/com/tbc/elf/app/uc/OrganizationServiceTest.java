@@ -9,6 +9,7 @@ import com.tbc.elf.base.service.HibernateBaseService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.annotation.Rollback;
 
@@ -25,24 +26,30 @@ public class OrganizationServiceTest extends BaseTests {
     @Resource
     OrganizationService organizationService;
 
+
     @Test
     @Rollback(false)
-    public void testSave() {
+    public void testAddOrganization() {
         Organization organization = new Organization();
         organization.setShowOrder(1);
         organization.setNamePath("1");
-        organization.setCorpCode("1");
-        organization.setNamePath("1");
-        organization.setLastModifyBy("1");
-        organization.setCreateBy("1");
-        organization.setCreateTime(new Date());
         organization.setOrganizationId("40288111531716fa01531716ffa40000");
         organization.setComments("1");
-        organization.setParentId("402881115316cbbe015316cbc3db0000");
         organization.setOrganizationName("123");
-        organization.setLastModifyTime(new Date());
-        organizationService.updateOrganization(organization);
-        //organizationService.addOrganization(organization);
+        organizationService.addOrganization(organization);
+
+    }
+
+    @Test
+    @Rollback(false)
+    public void testUpdateOrganization() {
+        Organization organization = new Organization();
+        organization.setShowOrder(1);
+        organization.setNamePath("1");
+        organization.setOrganizationId("40288111531716fa01531716ffa40000");
+        organization.setComments("1");
+        organization.setOrganizationName("123");
+        organizationService.addOrganization(organization);
 
     }
 
