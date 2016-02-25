@@ -1,10 +1,7 @@
 package com.tbc.elf.base;
 
-import com.tbc.elf.app.uc.service.UserService;
-import com.tbc.elf.base.BaseTests;
-import com.tbc.elf.base.service.BaseService;
 import com.tbc.elf.base.service.HibernateBaseService;
-import com.tbc.elf.base.service.HqlBuilder;
+import com.tbc.elf.base.util.HqlBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;

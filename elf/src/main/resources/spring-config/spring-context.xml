@@ -28,9 +28,9 @@
     <bean id="sessionFactory"
           class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
-        <!--<property name="entityInterceptor">
-            <bean class="com.tbc.base.service.interceptor.BaseDaoInterceptor"/>
-        </property>-->
+        <property name="entityInterceptor">
+            <bean class="com.tbc.elf.base.service.interceptor.BaseModelInterceptor"/>
+        </property>
         <property name="packagesToScan">
             <list>
                 <value>com.tbc.elf.**.model</value>
