@@ -1,4 +1,4 @@
-package com.tbc.elf.base.service;
+package com.tbc.elf.base.util;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -177,8 +177,10 @@ public class HqlBuilder {
     }
 
     /**
-     * @param str
-     * @return
+     * 用于删除字符串的最后一个字符
+     *
+     * @param str 需要处理的字符串
+     * @return 返回去除后的builder
      */
     public HqlBuilder removeLastSlice(String str) {
         if (str == null || str.isEmpty()) {

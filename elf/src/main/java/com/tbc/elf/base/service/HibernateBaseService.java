@@ -1,5 +1,6 @@
 package com.tbc.elf.base.service;
 
+import com.tbc.elf.base.util.HqlBuilder;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.hibernate.Criteria;
