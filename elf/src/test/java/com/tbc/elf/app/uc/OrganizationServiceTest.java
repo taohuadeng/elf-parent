@@ -13,8 +13,7 @@ import org.junit.Test;
 import org.springframework.test.annotation.Rollback;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * 测试测试类
@@ -37,18 +36,24 @@ public class OrganizationServiceTest extends BaseTests {
         organization.setLastModifyBy("1");
         organization.setCreateBy("1");
         organization.setCreateTime(new Date());
+        organization.setOrganizationId("40288111531716fa01531716ffa40000");
         organization.setComments("1");
-        organization.setOrganizationName("1");
+        organization.setParentId("402881115316cbbe015316cbc3db0000");
+        organization.setOrganizationName("123");
         organization.setLastModifyTime(new Date());
-        organizationService.save(organization);
+        organizationService.updateOrganization(organization);
+        //organizationService.addOrganization(organization);
 
     }
 
     @Test
     public void testList() {
-        List<Object[]> result = organizationService.getOrganizations();
-        for (Object[] myResult : result) {
-            System.out.println(myResult[0] + "-----" + myResult[1]);
-        }
+        Set<String> set1 = new HashSet<String>(1);
+        set1.add("402881115316cbbe015316cbc3db0000");
+        set1.add("402881115316cc11015316cc171c0000");
+        List<Organization> result = organizationService.findOrganization(set1);
+        System.out.println(result.size());
     }
+
+
 }

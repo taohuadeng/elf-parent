@@ -79,8 +79,8 @@ public class Organization extends BaseModel {
     /**
      * 组织负责人ID
      */
-    @Column
-    private boolean manageUserId;
+    @Column(length = 32)
+    private String manageUserId;
 
     /**
      * 父组织ID
@@ -160,11 +160,11 @@ public class Organization extends BaseModel {
         this.needLimitAccount = needLimitAccount;
     }
 
-    public boolean isManageUserId() {
+    public String isManageUserId() {
         return manageUserId;
     }
 
-    public void setManageUserId(boolean manageUserId) {
+    public void setManageUserId(String manageUserId) {
         this.manageUserId = manageUserId;
     }
 
