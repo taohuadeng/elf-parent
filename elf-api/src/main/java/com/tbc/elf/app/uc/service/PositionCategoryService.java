@@ -12,7 +12,7 @@ import com.tbc.elf.base.service.BaseService;
 public interface PositionCategoryService extends BaseService<PositionCategory>{
 
     /**
-     * 保存岗位列表
+     * 保存岗位类别信息（自动维护idPath、namePath和showOrder字段）
      *
      * @param positionCategory 岗位类别
      * @return 岗位类别id

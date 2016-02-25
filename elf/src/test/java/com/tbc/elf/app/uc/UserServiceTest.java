@@ -4,15 +4,19 @@ import com.tbc.elf.app.uc.model.User;
 import com.tbc.elf.app.uc.service.UserService;
 import com.tbc.elf.base.BaseTests;
 import com.tbc.elf.base.service.HibernateBaseService;
+import com.tbc.elf.base.service.HqlBuilder;
+import com.tbc.elf.base.util.UUIDGenerator;
 import com.tbc.elf.common.service.RedisService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
 import org.junit.Test;
-import redis.clients.jedis.JedisCommands;
+import org.springframework.test.annotation.Rollback;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 测试测试类

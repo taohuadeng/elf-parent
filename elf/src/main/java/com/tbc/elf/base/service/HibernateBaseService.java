@@ -1,5 +1,7 @@
 package com.tbc.elf.base.service;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -15,7 +17,9 @@ import org.springframework.util.Assert;
 import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 @SuppressWarnings("unchecked")
@@ -119,6 +123,33 @@ public class HibernateBaseService {
         //return getHibernateTemplate().find(queryString, value);
         Query query = this.getSession().createQuery(queryString);
         query.setParameter(0, value);
+        return query.list();
+    }
+
+    public List find(HqlBuilder hqlBuilder) {
+        Query query = this.getSession().createQuery(hqlBuilder.toString());
+
+        List<Object> parameterList = hqlBuilder.getParameterList();
+        if (CollectionUtils.isNotEmpty(parameterList)) {
+            for (int i = 0; i < parameterList.size(); i++) {
+                Object obj = parameterList.get(i);
+                query.setParameter(i,obj);
+            }
+        }
+
+        Map<String,Object> parameterMap = hqlBuilder.getParameterMap();
+        if (MapUtils.isNotEmpty(parameterMap)) {
+            for (Map.Entry<String, Object> entry : parameterMap.entrySet()) {
+                String placeHolder = entry.getKey();
+                Object value = entry.getValue();
+                if (value instanceof Collection) {
+                    query.setParameterList(placeHolder, (Collection) value);
+                } else {
+                    query.setParameter(placeHolder,value);
+                }
+            }
+        }
+
         return query.list();
     }
 

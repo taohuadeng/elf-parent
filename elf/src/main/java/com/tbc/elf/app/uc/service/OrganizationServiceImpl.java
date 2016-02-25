@@ -3,7 +3,6 @@ package com.tbc.elf.app.uc.service;
 import com.tbc.elf.app.uc.model.Organization;
 import com.tbc.elf.base.service.BaseServiceImpl;
 import org.apache.commons.collections.CollectionUtils;
-import org.junit.Assert;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
