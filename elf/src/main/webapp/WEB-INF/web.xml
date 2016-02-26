@@ -63,6 +63,32 @@
         <filter-name>springSecurityFilterChain</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+    <filter>
+        <filter-name>userDetailsSetFilter</filter-name>
+        <filter-class>com.tbc.elf.base.security.util.ELFUserDetailsFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>userDetailsSetFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!-- 自定义过滤器Security过滤器 -->
+    <!--<filter>
+        <filter-name>myUserDetailsSetFilter</filter-name>
+        <filter-class>com.tbc.elf.base.security.util.ELFUserDetailsFilter</filter-class>
+        <init-param>
+            <param-name>loginService</param-name>
+            <param-value>loginService</param-value>
+        </init-param>
+        <init-param>
+            <param-name>userService</param-name>
+            <param-value>userService</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>myUserDetailsSetFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>-->
 
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>

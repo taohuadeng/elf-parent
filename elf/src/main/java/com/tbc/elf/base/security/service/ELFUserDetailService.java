@@ -1,22 +1,24 @@
 package com.tbc.elf.base.security.service;
 
-import com.tbc.elf.app.uc.model.Authority;
+import com.tbc.elf.app.uc.model.Login;
 import com.tbc.elf.app.uc.service.AuthorityService;
 import com.tbc.elf.app.uc.service.LoginService;
 import com.tbc.elf.app.uc.service.UserService;
 import com.tbc.elf.base.security.model.ResourceDetails;
-import com.tbc.elf.base.security.util.AuthenticationUtil;
+import com.tbc.elf.base.security.model.SecurityResource;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ELFUserDetailService implements UserDetailsService {
-    private final String msg = "<<<<<<<<<<<<<<<<<<------------------->>>>>>>>>>>>>>>>>>";
-    private final String rolePrefix = "ROLE_";
-
     @Resource
     private UserService userService;
     @Resource
@@ -30,80 +32,57 @@ public class ELFUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         String corpCode = "";
-        String userName = "";
+        String loginName = "";
         if (username.contains("|")) {
             String[] split = username.split("\\|");
             corpCode = split[0];
-            userName = split[1];
+            loginName = split[1];
         }
-        return null;
+
+        if (StringUtils.isEmpty(corpCode) || !"default".equals(corpCode)) {
+            throw new RuntimeException("CorpCode is not exist!");
+        }
+
+        if (StringUtils.isEmpty(loginName)) {
+            throw new RuntimeException("LoginName can not be null!");
+        }
+
+        Login login = loginService.getLogin(loginName, corpCode);
+        if (login == null || StringUtils.isEmpty(login.getUserId())) {
+            throw new RuntimeException("User is not exist!");
+        }
+
+        List<String> authorityUrls = authorityService.listAuthorityUrls(login.getUserId());
+        List<GrantedAuthority> auths = new ArrayList<GrantedAuthority>(authorityUrls.size());
+        for (String authorityUrl : authorityUrls) {
+            String rolePrefix = "ROLE_";
+            String roleName = rolePrefix + authorityUrl;
+            GrantedAuthority authority = new SimpleGrantedAuthority(roleName);
+            auths.add(authority);
+        }
+
+        return new User(loginName, login.getPassword(), true, true, true, true, auths);
     }
 
-
-//        System.out.println(msg + "登录名:" + username);
-//        // 根据用户名查询出用户基本信息、权限
-//        List<Operator> operList = systemService.getOperByAccount(username);
-//        if (operList == null || operList.size() != 1) {
-//            throw new UsernameNotFoundException("用户" + username + "不存在!");
-//        }
-//        Operator operator = operList.get(0);
-//
-//        // 权限取得
-//        List<GrantedAuthority> auths = new ArrayList<GrantedAuthority>();
-//        if (operator.getRoles() != null && operator.getRoles().size() > 0) {
-//            for (Role r : operator.getRoles()) {
-//                if (r.getFunctions() != null && r.getFunctions().size() > 0) {
-//                    for (Function f : r.getFunctions()) {
-//                        //String roleName = rolePrefix + f.getId();
-//                        //我改的
-//                        String roleName = rolePrefix + f.getFunUrl();
-//                        GrantedAuthority authority = new SimpleGrantedAuthority(roleName);
-//                        auths.add(authority);
-//                    }
-//                }
-//            }
-//        }
-//
-//        // 构造UserDetails
-//        /*boolean enabled = true;
-//        boolean accountNonExpired = true;
-//        boolean credentialsNonExpired = true;
-//        boolean accountNonLocked = true;*/
-//
-//        return new User(operator.getOperAccountNo(), operator.getOperPassword(), true, true, true, true, auths);
-//    }
-//
     /**
      * 取得所有权限
      */
-//    public List<ResourceDetails> findAuthority() {
-//        // 去数据库中查询出所有权限
-//        String hql = "FROM Authority WHERE corpCode = ?";
-//        List<Authority> authorities = authorityService.listByHQL(hql, new Object[]{AuthenticationUtil.getCorpCode()});
-//
-//        return getResourceByPrivResource(functions);
-//    }
+    public List<ResourceDetails> findAuthority() {
+        // 去数据库中查询出所有权限
+        List<String> authorityUrls = authorityService.listAuthorityUrls();
 
-    /**
-     * 权限名称拼上ROLE_（ROLE_ + roleName）
-     *
-     * @param roleName
-     */
-    public String formatRoleName(String roleName) {
-        return rolePrefix + roleName;
+        return getResourceByPrivResource(authorityUrls);
     }
 
-//    private List<ResourceDetails> getResourceByPrivResource(List<Function> funs) {
-//        List<ResourceDetails> result = new ArrayList<ResourceDetails>();
-//        for (Function fun : funs) {
-//            //String roleName = rolePrefix + String.valueOf(fun.getId());// .toUpperCase();
-//            //我改的
-//            String roleName = rolePrefix + String.valueOf(fun.getFunUrl());
-//            GrantedAuthority authority = new SimpleGrantedAuthority(roleName);
-//            result.add(new SecurityResource(fun.getFunUrl(), SecurityResource.RESOURCE_TYPE_URL, authority));
-//        }
-//
-//        return result;
-//    }
+    private List<ResourceDetails> getResourceByPrivResource(List<String> authorityUrls) {
+        List<ResourceDetails> result = new ArrayList<ResourceDetails>();
+        for (String authorityUrl : authorityUrls) {
+            String rolePrefix = "ROLE_";
+            String roleName = rolePrefix + authorityUrl;
+            GrantedAuthority authority = new SimpleGrantedAuthority(roleName);
+            result.add(new SecurityResource(authorityUrl, SecurityResource.RESOURCE_TYPE_URL, authority));
+        }
 
+        return result;
+    }
 }

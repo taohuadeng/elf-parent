@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-@Service
+@Service("loginService")
 public class LoginServiceImpl extends BaseServiceImpl<Login> implements LoginService {
 
     @Override
@@ -23,4 +23,29 @@ public class LoginServiceImpl extends BaseServiceImpl<Login> implements LoginSer
         return baseService.queryUniqueResult(builder);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public String getUserIdByLoginAndCorpCode(String loginName, String corpCode) {
+        Assert.hasText(loginName, "LoginName is empty!");
+        Assert.hasText(corpCode, "CorpCode is empty!");
+
+        HqlBuilder builder = new HqlBuilder("SELECT userId FROM Login");
+        builder.append("WHERE corpCode = ?", corpCode);
+        builder.append("AND loginName = ?", loginName);
+
+        return baseService.queryUniqueResult(builder);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Login getLogin(String loginName, String corpCode) {
+        Assert.hasText(loginName, "LoginName is empty!");
+        Assert.hasText(corpCode, "CorpCode is empty!");
+
+        HqlBuilder builder = new HqlBuilder("FROM Login");
+        builder.append("WHERE corpCode = ?", corpCode);
+        builder.append("AND loginName = ?", loginName);
+        
+        return baseService.queryUniqueResult(builder);
+    }
 }

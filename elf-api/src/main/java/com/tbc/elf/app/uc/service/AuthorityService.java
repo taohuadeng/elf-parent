@@ -21,4 +21,10 @@ public interface AuthorityService extends BaseService<Authority> {
      */
     List<String> listAuthorityUrls(String userId);
 
+    /**
+     * 该方法用于根据人员ID获得其所有权限集合
+     *
+     * @return 权限集合
+     */
+    List<String> listAuthorityUrls();
 }

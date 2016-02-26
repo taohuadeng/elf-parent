@@ -9,7 +9,7 @@ import org.springframework.util.Assert;
 
 import java.util.List;
 
-@Service
+@Service("roleService")
 public class RoleServiceImpl extends BaseServiceImpl<Role> implements RoleService {
 
     @Override

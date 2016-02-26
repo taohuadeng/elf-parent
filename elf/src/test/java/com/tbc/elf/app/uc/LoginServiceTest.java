@@ -8,6 +8,7 @@ import com.tbc.elf.base.util.UUIDGenerator;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
+import org.springframework.test.annotation.Rollback;
 
 import javax.annotation.Resource;
 
@@ -16,6 +17,7 @@ public class LoginServiceTest extends BaseTests {
     private LoginService loginService;
 
     @Test
+    @Rollback(false)
     public void testGetPassword() {
         Login login = new Login();
         Md5PasswordEncoder encoder = new Md5PasswordEncoder();

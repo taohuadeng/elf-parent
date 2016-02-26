@@ -19,4 +19,24 @@ public interface LoginService extends BaseService<Login> {
      * @return 登录密码
      */
     String getPasswordByLoginAndCorpCode(String loginName, String corpCode);
+
+    /**
+     * 该方法用于根据公司编号和登录名获取用户主键
+     * <p>登录用到</p>
+     *
+     * @param loginName 登录名
+     * @param corpCode  公司编号
+     * @return 用户主键
+     */
+    String getUserIdByLoginAndCorpCode(String loginName, String corpCode);
+
+    /**
+     * 该方法用于根据公司编号和登录名获取用户登录信息实体
+     * <p>登录用到</p>
+     *
+     * @param loginName 登录名
+     * @param corpCode  公司编号
+     * @return 用户主键
+     */
+    Login getLogin(String loginName, String corpCode);
 }

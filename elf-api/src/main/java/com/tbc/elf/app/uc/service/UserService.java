@@ -11,5 +11,11 @@ import com.tbc.elf.base.service.BaseService;
  */
 public interface UserService extends BaseService<User> {
 
-
+    /**
+     * 该方法用于根据用户主键获取用户信息
+     *
+     * @param userId 用户主键
+     * @return 用户对象
+     */
+    User getUser(String userId);
 }
