@@ -1,11 +1,17 @@
 package com.tbc.elf.base.security.service;
 
+import com.tbc.elf.app.uc.model.Authority;
+import com.tbc.elf.app.uc.service.AuthorityService;
+import com.tbc.elf.app.uc.service.LoginService;
 import com.tbc.elf.app.uc.service.UserService;
+import com.tbc.elf.base.security.model.ResourceDetails;
+import com.tbc.elf.base.security.util.AuthenticationUtil;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 public class ELFUserDetailService implements UserDetailsService {
     private final String msg = "<<<<<<<<<<<<<<<<<<------------------->>>>>>>>>>>>>>>>>>";
@@ -13,12 +19,23 @@ public class ELFUserDetailService implements UserDetailsService {
 
     @Resource
     private UserService userService;
+    @Resource
+    private LoginService loginService;
+    @Resource
+    private AuthorityService authorityService;
 
     /**
      * 根据用户名，登录处理
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        String corpCode = "";
+        String userName = "";
+        if (username.contains("|")) {
+            String[] split = username.split("\\|");
+            corpCode = split[0];
+            userName = split[1];
+        }
         return null;
     }
 
@@ -56,25 +73,26 @@ public class ELFUserDetailService implements UserDetailsService {
 //        return new User(operator.getOperAccountNo(), operator.getOperPassword(), true, true, true, true, auths);
 //    }
 //
-//    /**
-//     * 取得所有权限
-//     */
+    /**
+     * 取得所有权限
+     */
 //    public List<ResourceDetails> findAuthority() {
 //        // 去数据库中查询出所有权限
-//        List<Function> functions = systemService.getFunctionList();
+//        String hql = "FROM Authority WHERE corpCode = ?";
+//        List<Authority> authorities = authorityService.listByHQL(hql, new Object[]{AuthenticationUtil.getCorpCode()});
 //
 //        return getResourceByPrivResource(functions);
 //    }
-//
-//    /**
-//     * 权限名称拼上ROLE_（ROLE_ + roleName）
-//     *
-//     * @param roleName
-//     */
-//    public String formatRoleName(String roleName) {
-//        return rolePrefix + roleName;
-//    }
-//
+
+    /**
+     * 权限名称拼上ROLE_（ROLE_ + roleName）
+     *
+     * @param roleName
+     */
+    public String formatRoleName(String roleName) {
+        return rolePrefix + roleName;
+    }
+
 //    private List<ResourceDetails> getResourceByPrivResource(List<Function> funs) {
 //        List<ResourceDetails> result = new ArrayList<ResourceDetails>();
 //        for (Function fun : funs) {

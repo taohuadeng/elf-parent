@@ -40,6 +40,9 @@ public class RoleAuthorities extends BaseModel {
     @Column(nullable = false, length = 32)
     private String authorityId;
 
+    @Transient
+    private Authority authority;
+
     public String getRoleAuthoritiesId() {
         return roleAuthoritiesId;
     }
@@ -62,5 +65,13 @@ public class RoleAuthorities extends BaseModel {
 
     public void setAuthorityId(String authorityId) {
         this.authorityId = authorityId;
+    }
+
+    public Authority getAuthority() {
+        return authority;
+    }
+
+    public void setAuthority(Authority authority) {
+        this.authority = authority;
     }
 }

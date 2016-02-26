@@ -7,6 +7,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.test.annotation.Rollback;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -27,14 +28,9 @@ public class AuthorityServiceTest extends BaseTests {
     @Test
     public void test() {
         Authority authority = new Authority();
-        authority.setCorpCode("default");
-        authority.setParentId("*");
+        authority.setParentId("297ea177531873b801531873c21f0000");
         authority.setSourceUrl("/app/uc/user/*");
         authority.setSourceName("人员管理");
-        authority.setCreateBy("createBy");
-        authority.setCreateTime(new Date());
-        authority.setLastModifyBy("lastModifyBy");
-        authority.setLastModifyTime(new Date());
         String authorityId = authorityService.save(authority);
         LOG.info(authorityId);
         Assert.assertNotNull(authorityId);
@@ -44,8 +40,17 @@ public class AuthorityServiceTest extends BaseTests {
         Assert.assertEquals("人员管理", auth.getSourceName());
         Assert.assertEquals("/app/uc/user/*", auth.getSourceUrl());
 
-        String hql = "FROM User WHERE corpCode = ?";
+        String hql = "FROM Authority WHERE corpCode = ?";
         List<Authority> authorities = authorityService.listByHQL(hql, new Object[]{"default"});
         Assert.assertNotNull(authorities);
+    }
+
+    @Test
+    public void testGetAuthorities(){
+        List<String> list = authorityService.listAuthorityUrls("uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu");
+        Assert.assertNotNull(list);
+        for (String s : list) {
+            LOG.info(s);
+        }
     }
 }

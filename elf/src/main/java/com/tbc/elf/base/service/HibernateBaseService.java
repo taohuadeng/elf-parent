@@ -1,6 +1,7 @@
 package com.tbc.elf.base.service;
 
 import com.tbc.elf.base.util.HqlBuilder;
+import com.tbc.elf.base.util.SqlBuilder;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.hibernate.Criteria;
@@ -10,13 +11,19 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.ColumnMapRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.orm.hibernate4.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -316,8 +323,8 @@ public class HibernateBaseService {
         return query.executeUpdate();
     }
 
-    /*
-    设置hqlBuilder的参数
+    /**
+     * 设置hqlBuilder的参数
      */
     private void setParameter(HqlBuilder hqlBuilder, Query query) {
         List<Object> parameterList = hqlBuilder.getParameterList();
@@ -350,7 +357,31 @@ public class HibernateBaseService {
         if (maxRecordNum != null && maxRecordNum > 0) {
             query.setMaxResults(maxRecordNum);
         }
-
     }
 
+    /**
+     * <使用SQL查询所需指定类型的结果>
+     *
+     * @param sqlBuilder sql对象
+     * @param entryClass 需要返回的类对象
+     * @param <T>        泛型
+     * @return 查询结果
+     */
+    public <T> List<T> queryBySQL(SqlBuilder sqlBuilder, Class<T> entryClass) {
+        return new NamedParameterJdbcTemplate(getJdbcTemplate().getDataSource())
+                .queryForList(sqlBuilder.getSql(), sqlBuilder.getParameterMap(), entryClass);
+    }
+
+    /**
+     * <使用SQL查询所需指定实体类型的结果>
+     *
+     * @param sqlBuilder sql对象
+     * @param entryClass 需要返回的类对象
+     * @param <T>        泛型
+     * @return 查询结果
+     */
+    public <T> List<T> queryModelBySQL(SqlBuilder sqlBuilder, Class<T> entryClass) {
+        return new NamedParameterJdbcTemplate(getJdbcTemplate().getDataSource())
+                .query(sqlBuilder.getSql(), sqlBuilder.getParameterMap(), BeanPropertyRowMapper.newInstance(entryClass));
+    }
 }
