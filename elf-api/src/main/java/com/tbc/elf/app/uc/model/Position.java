@@ -31,31 +31,16 @@ public class Position extends BaseModel {
     private String positionName;
 
     /**
+     * 岗位类别id
+     */
+    @Column(length = 32)
+    private String categoryId;
+
+    /**
      * 排序
      */
     @Column(nullable = false)
     private double showOrder;
-
-    /**
-     * 职务体系id
-     */
-    @Column(length = 32)
-    private String dutyArchitectureId;
-
-    /**
-     * 职务id
-     */
-    @Column(length = 32)
-    private String dutyId;
-
-    /**
-     * 岗位序列id
-     */
-    @Column(length = 32)
-    private String positionLineId;
-
-    @Column(length = 32)
-    private String categoryId;
 
     public String getPositionId() {
         return positionId;
@@ -79,30 +64,6 @@ public class Position extends BaseModel {
 
     public void setShowOrder(double showOrder) {
         this.showOrder = showOrder;
-    }
-
-    public String getDutyArchitectureId() {
-        return dutyArchitectureId;
-    }
-
-    public void setDutyArchitectureId(String dutyArchitectureId) {
-        this.dutyArchitectureId = dutyArchitectureId;
-    }
-
-    public String getDutyId() {
-        return dutyId;
-    }
-
-    public void setDutyId(String dutyId) {
-        this.dutyId = dutyId;
-    }
-
-    public String getPositionLineId() {
-        return positionLineId;
-    }
-
-    public void setPositionLineId(String positionLineId) {
-        this.positionLineId = positionLineId;
     }
 
     public String getCategoryId() {

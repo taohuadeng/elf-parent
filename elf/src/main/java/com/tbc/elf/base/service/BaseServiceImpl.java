@@ -15,6 +15,7 @@ import java.util.List;
  * @since 2016年2月24日11:13:27
  */
 public class BaseServiceImpl<T> implements BaseService<T> {
+
     @Resource
     protected HibernateBaseService baseService;
 

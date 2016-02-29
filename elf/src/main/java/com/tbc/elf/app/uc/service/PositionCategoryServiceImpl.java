@@ -63,7 +63,7 @@ public class PositionCategoryServiceImpl extends BaseServiceImpl<PositionCategor
         hqlBuilder.append("SELECT max(showOrder) FROM PositionCategory WHERE corpCode = ?", AuthenticationUtil.getCorpCode());
         hqlBuilder.append("and parentId = ?",parentId);
         Double maxShowOrder = baseService.queryUniqueResult(hqlBuilder);
-        return maxShowOrder == null ? 0 : maxShowOrder;
+        return maxShowOrder == null ? 0D : maxShowOrder;
     }
 
     @Override
