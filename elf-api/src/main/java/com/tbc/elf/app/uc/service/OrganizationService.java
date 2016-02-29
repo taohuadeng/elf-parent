@@ -11,13 +11,12 @@ import java.util.Set;
  * 人员所属部门的业务逻辑操作
  *
  * @author ELF@TEAM
- * @since 2016/2/24  13:40
+ * @since 2016年2月26日14:07:16
  */
 public interface OrganizationService extends BaseService<Organization> {
-    List<Object[]> getOrganizations();
 
-    
-     /**
+
+    /**
      * 根据公司编号初始化部门
      *
      * @param corpCode 公司编号
@@ -25,36 +24,48 @@ public interface OrganizationService extends BaseService<Organization> {
      */
     public String initOrganization(String corpCode, String lastResultStatus);
 
-    /**
-     * 增加一个部门
-     *
-     * @param Organization
-     * @return 增加的部门的主键
-     * @refactor Gaoshan@HF
-     * @since 2015年3月31日
+     /**
+     * 添加一个部门
+     * @param Organization:部门实体
+     * @throws java.lang.IllegalArgumentException
+     *          <ul>
+     *              <li>
+     *                  当organization为null时
+     *                  抛出IllegalArgumentException
+     *              </li>
+     *          </ul>
      */
     String addOrganization(Organization Organization);
 
     /**
-     * 修改部门
-     *
-     * @param Organization 修改一个部门
-     * @author 杨涛
-     * @since 2015年3月31日 codeReview by GAOshan@HF
+     * 更新部门
+     * @param Organization:部门实体
+     * @throws java.lang.IllegalArgumentException
+     *          <ul>
+     *              <li>
+     *                  当organization为null时
+     *                  抛出IllegalArgumentException
+     *              </li>
+     *              <li>
+     *                  当organization#organizationId为null时
+     *                  抛出IllegalArgumentException
+     *              </li>
+     *          </ul>
      */
     void updateOrganization(Organization Organization);
 
-    /**
-     * 根据部门id查找对应的部门集合
-     * <ul>
-     * <li>*</li>
-     * </ul>
-     *
-     * @param OrganizationIds
-     * @return 符合条件的部门集合
-     * @author 杨涛
+   /**
+     * 根据部门id列表查找部门
+     * @param organizationIds:部门id列表
+     * @throws java.lang.IllegalArgumentException
+     *          <ul>
+     *              <li>
+     *                  当organizationIds为null时或者organizationIds长度为0时
+     *                  抛出IllegalArgumentException
+     *              </li>
+     *          </ul>
      */
-    List<Organization> findOrganization(Set<String> OrganizationIds);
+    List<Organization> findOrganization(Set<String> organizationIds);
 
     /**
      * 根据部门名称筛选部门节点列表JSON
@@ -79,15 +90,16 @@ public interface OrganizationService extends BaseService<Organization> {
      * @author SHIJIACHEN
      */ //TODO codereivew
     String findOrgTreeJson(String orgId, Boolean hasOrgCode);
+
     /**
      * 忽略权限获取所有（包括根部门）部门树,返回的json数据的形式如下：
      * <ul>
-     *     <li>id:部门id</li>
-     *     <li>nm:部门名称</li>
-     *     <li>sn:孩子节点</li>
+     * <li>id:部门id</li>
+     * <li>nm:部门名称</li>
+     * <li>sn:孩子节点</li>
      * </ul>
      *
-     * @param orgId 部门树的根id
+     * @param orgId      部门树的根id
      * @param hasOrgCode 部门名称中是否包含部门编号
      * @return
      * @author leon modified by yinhao@HF
@@ -109,16 +121,17 @@ public interface OrganizationService extends BaseService<Organization> {
      * 根据公司ID 公司ID在上下文中 查询部门体系的树
      * 返回的json数据包括以下属性：
      * <ol>
-     *     <li>id:部门id</li>
-     *     <li>text:部门名称</li>
-     *     <li>attribute:<ol>
-     *         <li>nodeType:Organization</li>
-     *         <li>info:部门全路径名</li>
-     *     </ol></li>
-     *     <li>children:孩子节点</li>
+     * <li>id:部门id</li>
+     * <li>text:部门名称</li>
+     * <li>attribute:<ol>
+     * <li>nodeType:Organization</li>
+     * <li>info:部门全路径名</li>
+     * </ol></li>
+     * <li>children:孩子节点</li>
      * </ol>
-     * @param root 指定的根节点，为空表示公司根部门
-     * @param hasOrgCode 部门名称中是否包含部门编号
+     *
+     * @param root        指定的根节点，为空表示公司根部门
+     * @param hasOrgCode  部门名称中是否包含部门编号
      * @param hasNamePath 节点中是否包含部门全路径
      * @return
      * @author yinhao@HF
@@ -186,7 +199,7 @@ public interface OrganizationService extends BaseService<Organization> {
      * 部门的上下平移
      *
      * @param OrganizationId 当前部门ID
-     * @param isUp       是否上移
+     * @param isUp           是否上移
      * @author Shi JiaChen
      */
     void moveOrganization(String OrganizationId, Boolean isUp);
@@ -248,6 +261,7 @@ public interface OrganizationService extends BaseService<Organization> {
     /**
      * 这个方法根据入参中的部门id列表，批量获得这些子部门id列表
      * 当这些组织没有任何子部门时，返回空List
+     *
      * @param OrganizationIdList 父部门id列表
      * @return 所有子部门id列表（包括自身）
      * @author yinhao@YINHAO
@@ -368,6 +382,13 @@ public interface OrganizationService extends BaseService<Organization> {
     public void deleteOrgByNoChild(String corpCode);
 
     /**
+     * 删除公司某个没有组织也没有人员的部门
+     * @param corpCode
+     * @param organizationId
+     */
+    public void deleteOrgByNoChildAndUser(String corpCode, String organizationId);
+
+    /**
      * 根据父ID，部门名称，得到相同名字的兄弟id
      *
      * @param parentId
@@ -439,9 +460,9 @@ public interface OrganizationService extends BaseService<Organization> {
     /**
      * 计算部门的父部门的当前人数， 当部门移动时， 人员移动时 增加人员时 删除人员时，都要调用此方法
      *
-     * @param OrganizationId  部门id
-     * @param count      部门人数
-     * @param hasMe      是否包含自己
+     * @param OrganizationId 部门id
+     * @param count          部门人数
+     * @param hasMe          是否包含自己
      * @refactor Gaoshan@HF
      * @since 2015年3月31日
      */
@@ -458,19 +479,13 @@ public interface OrganizationService extends BaseService<Organization> {
     void synOrgNamePath();
 
     /**
-     * 重庆定制，根据showOrder排序获取所有部门名称
-     * 重庆只包含一级部门
-     * @return 部门名称
-     */
-    List<String> getOrganizationNames();
-
-    /**
      * 列出当前公司所有二级部门(baxf宝安消防局定制)
+     *
      * @return 当前公司所有二级部门
      * <ul>
-     *     Organization包含属性：
-     *     <li>OrganizationId:部门Id</li>
-     *     <li>OrganizationName:部门名称</li>
+     * Organization包含属性：
+     * <li>OrganizationId:部门Id</li>
+     * <li>OrganizationName:部门名称</li>
      * </ul>
      * @author suran@HF
      * @since 2015-5-13
@@ -479,7 +494,8 @@ public interface OrganizationService extends BaseService<Organization> {
 
     /**
      * 查询指定等级的部门信息列表
-     * @param isLimit 部门是否限制人数，为null时，表示查询所有的
+     *
+     * @param isLimit  部门是否限制人数，为null时，表示查询所有的
      * @param orgLevel 部门等级，比如一级部门,当orgLevel<1时，默认为1
      * @return 符合条件的部门信息列表
      * @ahthor yeWanQing@HF
@@ -489,8 +505,9 @@ public interface OrganizationService extends BaseService<Organization> {
 
     /**
      * 根据指定部门id获取该部门对应的根部门下的二级部门和三级部门id列表
+     *
      * @param orgId 部门id
-     * @return 对应的二级部门和三级部门Ids按顺序,二级在前面
+     * @return 对应的二级部门和三级部门Ids按顺序, 二级在前面
      * @throws java.lang.IllegalArgumentException 当orgId为空时
      * @author suRan@HF
      * @since 2015-6-9
@@ -499,6 +516,7 @@ public interface OrganizationService extends BaseService<Organization> {
 
     /**
      * 这个方法获得入参中部门id对应的部门路径名
+     *
      * @param orgIds 部门id集合
      * @return key-部门id,value-部门路径名
      * @author yinhao@HF
@@ -511,17 +529,17 @@ public interface OrganizationService extends BaseService<Organization> {
      *
      * @param orgId 指定做为根部门的部门id，为空时：
      *              <ol>
-     *                  <li>如果当前用户为系统管理员，则表示公司根部门id</li>
-     *                  <li>如果当前用户为培训管理员，程序则把根部门处理成该培训管理员管理的所有部门</li>
+     *              <li>如果当前用户为系统管理员，则表示公司根部门id</li>
+     *              <li>如果当前用户为培训管理员，程序则把根部门处理成该培训管理员管理的所有部门</li>
      *              </ol>
      * @param depth 指定根部门下部门树的查询最大深度
      *              比如，depth为2时，返回的树中只包括根节点，根节点的子节点和根节点的孙子节点
-     * @return 指定部门下的部门树json数据,每个节点包含如下属性：
-     *                  <ul>
-     *                      <li>id:部门id</li>
-     *                      <li>nm:部门名称</li>
-     *                      <li>sn:孩子节点集合的引用</li>
-     *                  </ul>
+     * @return 指定部门下的部门树json数据, 每个节点包含如下属性：
+     * <ul>
+     * <li>id:部门id</li>
+     * <li>nm:部门名称</li>
+     * <li>sn:孩子节点集合的引用</li>
+     * </ul>
      * @author yinhao@HF
      * @since 2015/6/18
      */
@@ -529,18 +547,20 @@ public interface OrganizationService extends BaseService<Organization> {
 
     /**
      * 获得当前公司所有组织列表集合信息
+     *
      * @return 组织列表集合 组织信息包含如下属性：
      * <ul>
-     *     <li>OrganizationId</li>
-     *     <li>OrganizationName</li>
-     *     <li>parentId</li>
-     *     <li>namePath</li>
+     * <li>OrganizationId</li>
+     * <li>OrganizationName</li>
+     * <li>parentId</li>
+     * <li>namePath</li>
      * </ul>
      */
     List<Organization> getAllOrganization();
 
     /**
      * 保存组织列表信息
+     *
      * @param Organizations 组织列表
      */
     void save(List<Organization> Organizations);
@@ -549,30 +569,31 @@ public interface OrganizationService extends BaseService<Organization> {
     /**
      * 这个方法根据入参传入的部门id列表，在当前公司获得每个部门下的人员id列表，
      * 并以"部门id"到"该部门下人员id列表"的映射的形式返回
-     * @param orgIdList 指定的部门id列表
-     * @param includeChildOrg 返回结果的value中是否包含子部门的人员id
+     *
+     * @param orgIdList         指定的部门id列表
+     * @param includeChildOrg   返回结果的value中是否包含子部门的人员id
      * @param accountStatusList 人员状态筛选条件
-     * @return key(orgId,部门id) - value(userIds, key代表的部门下的人员id列表),人员id按最后修改时间降序排列
-     * @throws java.lang.IllegalArgumentException
-     *                      <ul>
-     *                          <li>orgIdList为空</li>
-     *                          <li>accountStatusList为空</li>
-     *                      </ul>
+     * @return key(orgId, 部门id) - value(userIds, key代表的部门下的人员id列表),人员id按最后修改时间降序排列
+     * @throws java.lang.IllegalArgumentException <ul>
+     *                                            <li>orgIdList为空</li>
+     *                                            <li>accountStatusList为空</li>
+     *                                            </ul>
      */
     Map<String, List<String>> getUserIdListGroupByOrgId(List<String> orgIdList, boolean includeChildOrg, List<String> accountStatusList);
 
     /**
      * 根据组织id列表找到对应的组织信息
+     *
      * @param orgIds 组织列表id
      * @return Map<String, Organization> key为组织id，value为组织信息，其中包含的属性有：
-     *                       <ul>
-     *                           <li>OrganizationId:组织id</li>
-     *                           <li>namePath:部门全路径</li>
-     *                           <li>OrganizationCode:组织编号</li>
-     *                       </ul>
+     * <ul>
+     * <li>OrganizationId:组织id</li>
+     * <li>namePath:部门全路径</li>
+     * <li>OrganizationCode:组织编号</li>
+     * </ul>
+     * @throws java.lang.IllegalArgumentException 当orgIds为空时
      * @author yeWanQing@HF
      * @since 2015年7月12日
-     * @throws java.lang.IllegalArgumentException 当orgIds为空时
      */
     Map<String, Organization> getOrgIdAndOrganizationMap(Set<String> orgIds);
 }

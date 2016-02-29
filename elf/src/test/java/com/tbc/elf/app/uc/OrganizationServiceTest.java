@@ -5,6 +5,7 @@ import com.tbc.elf.app.uc.model.User;
 import com.tbc.elf.app.uc.service.OrganizationService;
 import com.tbc.elf.app.uc.service.UserService;
 import com.tbc.elf.base.BaseTests;
+import com.tbc.elf.base.security.util.AuthenticationUtil;
 import com.tbc.elf.base.service.HibernateBaseService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -33,9 +34,12 @@ public class OrganizationServiceTest extends BaseTests {
         Organization organization = new Organization();
         organization.setShowOrder(1);
         organization.setNamePath("1");
-        organization.setOrganizationId("40288111531716fa01531716ffa40000");
         organization.setComments("1");
-        organization.setOrganizationName("123");
+        String rootId = "";
+        rootId = organizationService.findCorpRootId();
+       rootId = "4028819d532c3fa401532c3fabb50000";
+        organization.setParentId(rootId);
+        organization.setOrganizationName("根");
         organizationService.addOrganization(organization);
 
     }
@@ -43,24 +47,25 @@ public class OrganizationServiceTest extends BaseTests {
     @Test
     @Rollback(false)
     public void testUpdateOrganization() {
-        Organization organization = new Organization();
-        organization.setShowOrder(1);
-        organization.setNamePath("1");
-        organization.setOrganizationId("40288111531716fa01531716ffa40000");
-        organization.setComments("1");
-        organization.setOrganizationName("123");
-        organizationService.addOrganization(organization);
-
+        String orgId = organizationService.findCorpRootId();
+        Organization root = new Organization();
+        root.setOrganizationId("4028819d532c3f4001532c3f48060000");
+        root.setOrganizationName("新根2");
+        organizationService.updateOrganization(root);
     }
 
     @Test
     public void testList() {
         Set<String> set1 = new HashSet<String>(1);
-        set1.add("402881115316cbbe015316cbc3db0000");
-        set1.add("402881115316cc11015316cc171c0000");
+        set1.add("402881115317922e0153179235020000");
+        set1.add("40288111531792f601531792fcd50000");
         List<Organization> result = organizationService.findOrganization(set1);
         System.out.println(result.size());
     }
 
+    @Test
+    public void testFindRootOrgByCorpCode() {
+        organizationService.findRootOrgByCorpCode("default");
+    }
 
 }

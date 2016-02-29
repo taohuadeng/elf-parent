@@ -5,10 +5,7 @@ import com.tbc.elf.base.util.SqlBuilder;
 import net.sf.ehcache.hibernate.HibernateUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
-import org.hibernate.Criteria;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import org.hibernate.*;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
 import org.hibernate.metadata.ClassMetadata;
@@ -406,31 +403,13 @@ public class HibernateBaseService {
 
     /**
      * 批量保存实体方法
+     *
      * @param entities:实体列表
      * @param <T>:泛型
      */
     public <T> void saveOrUpdateEntityList(List<T> entities) {
-        Session session = null;
-        if (entities != null && entities.size() > 0) {
-            try {
-                session = getSession();
-                session.beginTransaction();
-                for (int i = 0; i < entities.size(); i++) {
-                    session.save(entities.get(i));
-                    if (i % 1000 == 0) {
-                        session.flush();
-                        session.clear();
-                    }
-                }
-                session.getTransaction().commit();
-            } catch (Exception e) {
-                e.printStackTrace();
-                session.getTransaction().rollback();
-            } finally {
-                if (session != null) {
-                    session.close();
-                }
-            }
+        for (T t : entities) {
+            saveOrUpdate(t);
         }
     }
 }
