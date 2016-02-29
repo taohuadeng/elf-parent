@@ -46,6 +46,14 @@ public interface BaseService<T> {
     void delete(String modelId);
 
     /**
+     * 根据主键id批量删除对应的实体类
+     *
+     * @param modelIds 实体主键列表
+     * @return 删除数据的条数
+     */
+    int delete(List<String> modelIds);
+
+    /**
      * 根据主键更新当前实体，如果实体主键未设置，则会抛出错误。
      * 未设置的值，会保留数据库原有值，设置的值为被更新成新值。
      *

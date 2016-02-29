@@ -3,12 +3,15 @@ package com.tbc.elf.app.uc;
 import com.tbc.elf.app.uc.model.Position;
 import com.tbc.elf.app.uc.service.PositionService;
 import com.tbc.elf.base.BaseTests;
+import com.tbc.elf.base.util.Page;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.test.annotation.Rollback;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 
 /**
  * 岗位的单元测试类
@@ -18,7 +21,7 @@ import javax.annotation.Resource;
  */
 public class PositionServiceTest extends BaseTests {
 
-    private Log log = LogFactory.getLog(this.getClass());
+    private Log LOG = LogFactory.getLog(this.getClass());
 
     @Resource
     private PositionService positionService;
@@ -36,6 +39,19 @@ public class PositionServiceTest extends BaseTests {
     @Test
     public void testGetMaxShowOrder() {
         double maxShowOrder = positionService.getMaxShowOrder();
-        log.info(">>>>>>>>>>>>>>>>>>>>>>>>" + maxShowOrder);
+        LOG.info(">>>>>>>>>>>>>>>>>>>>>>>>" + maxShowOrder);
+    }
+
+    @Test
+    public void testSearch() {
+        Page<Position> page = positionService.search("", new Page<Position>());
+        Assert.assertNotNull(page.getRows());
+    }
+
+    @Test
+    @Rollback(false)
+    public void test() {
+        int deleteCount = positionService.delete(Arrays.asList("402881ae5317c4b5015317c4ba460000", "402881ae5317c736015317c73bb50000"));
+        Assert.assertTrue(deleteCount == 2);
     }
 }

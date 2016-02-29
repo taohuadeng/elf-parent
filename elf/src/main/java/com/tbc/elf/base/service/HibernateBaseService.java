@@ -11,6 +11,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
+import org.hibernate.metadata.ClassMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.ColumnMapRowMapper;
@@ -358,6 +359,23 @@ public class HibernateBaseService {
         if (maxRecordNum != null && maxRecordNum > 0) {
             query.setMaxResults(maxRecordNum);
         }
+    }
+
+    /**
+     * 根据主键id列表批量删除一组数据
+     *
+     * @param modelIds 主键列表
+     * @param clazz class对象
+     * @return 删除数据的条数
+     */
+    public int delete(List<String> modelIds,Class clazz) {
+        ClassMetadata classMetadata = hibernateTemplate.getSessionFactory().getClassMetadata(clazz);
+        String idPropertyName = classMetadata.getIdentifierPropertyName();
+        HqlBuilder batchDeleteBuilder = new HqlBuilder();
+        batchDeleteBuilder.append("delete from " + clazz.getSimpleName());
+        batchDeleteBuilder.append("where " + idPropertyName + " in (:modelIds)");
+        batchDeleteBuilder.addParameter("modelIds",modelIds);
+        return executeUpdate(batchDeleteBuilder);
     }
 
     /**

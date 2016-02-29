@@ -50,6 +50,12 @@ public class BaseServiceImpl<T> implements BaseService<T> {
     }
 
     @Override
+    @Transactional(readOnly = false, isolation =  Isolation.READ_COMMITTED)
+    public int delete(List<String> modelIds) {
+        return baseService.delete(modelIds,modelClass);
+    }
+
+    @Override
     public String update(T model) {
         return null;
     }

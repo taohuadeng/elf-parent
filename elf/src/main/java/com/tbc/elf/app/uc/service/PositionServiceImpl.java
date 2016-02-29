@@ -44,7 +44,7 @@ public class PositionServiceImpl extends BaseServiceImpl<Position> implements Po
 
         if (page.isAutoCount()) {
             HqlBuilder countBuilder = new HqlBuilder();
-            countBuilder.append("select count(*) from Position");
+            countBuilder.append("select count(*)");
             countBuilder.append(conditionBuilder);
             Long count = baseService.queryUniqueResult(countBuilder);
             if (count == null || count == 0) {
@@ -54,7 +54,6 @@ public class PositionServiceImpl extends BaseServiceImpl<Position> implements Po
         }
 
         HqlBuilder hqlBuilder = new HqlBuilder();
-        hqlBuilder.append("select *");
         hqlBuilder.append(conditionBuilder);
         hqlBuilder.append("order by lastModifyTime");
         if (page.isAutoPaging()) {
