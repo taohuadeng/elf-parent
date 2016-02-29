@@ -5,6 +5,7 @@ import com.tbc.elf.base.security.util.AuthenticationUtil;
 import com.tbc.elf.base.service.BaseServiceImpl;
 import com.tbc.elf.base.util.SqlBuilder;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -39,9 +40,14 @@ public class AuthorityServiceImpl extends BaseServiceImpl<Authority> implements 
     @Override
     @Transactional(readOnly = true)
     public List<String> listAuthorityUrls() {
+        String corpCode = AuthenticationUtil.getCorpCode();
+        if (StringUtils.isEmpty(corpCode)) {
+            return new ArrayList<String>(0);
+        }
+
         SqlBuilder builder = new SqlBuilder("SELECT source_url FROM t_uc_authority");
         builder.append("WHERE corp_code =:corpCode");
-        builder.addParameter("corpCode", AuthenticationUtil.getCorpCode());
+        builder.addParameter("corpCode", corpCode);
 
         return baseService.queryBySQL(builder, String.class);
     }
