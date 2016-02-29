@@ -2,6 +2,7 @@ package com.tbc.elf.base.service;
 
 import com.tbc.elf.base.util.HqlBuilder;
 import com.tbc.elf.base.util.SqlBuilder;
+import net.sf.ehcache.hibernate.HibernateUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.hibernate.Criteria;
@@ -383,5 +384,35 @@ public class HibernateBaseService {
     public <T> List<T> queryModelBySQL(SqlBuilder sqlBuilder, Class<T> entryClass) {
         return new NamedParameterJdbcTemplate(getJdbcTemplate().getDataSource())
                 .query(sqlBuilder.getSql(), sqlBuilder.getParameterMap(), BeanPropertyRowMapper.newInstance(entryClass));
+    }
+
+    /**
+     * 批量保存实体方法
+     * @param entities:实体列表
+     * @param <T>:泛型
+     */
+    public <T> void saveOrUpdateEntityList(List<T> entities) {
+        Session session = null;
+        if (entities != null && entities.size() > 0) {
+            try {
+                session = getSession();
+                session.beginTransaction();
+                for (int i = 0; i < entities.size(); i++) {
+                    session.save(entities.get(i));
+                    if (i % 1000 == 0) {
+                        session.flush();
+                        session.clear();
+                    }
+                }
+                session.getTransaction().commit();
+            } catch (Exception e) {
+                e.printStackTrace();
+                session.getTransaction().rollback();
+            } finally {
+                if (session != null) {
+                    session.close();
+                }
+            }
+        }
     }
 }
