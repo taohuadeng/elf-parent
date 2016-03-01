@@ -15,6 +15,32 @@ import javax.persistence.*;
 @Table(name = "t_uc_group_member")
 public class GroupMember extends BaseModel {
 
+    public enum ReferType {
+        ORGANIZATION("ORGANIZATION"), POSITION("POSITION"), USER("USER");
+        private final String text;
+
+        private ReferType(String text) {
+            this.text = text;
+        }
+
+        public String getText() {
+            return text;
+        }
+    }
+
+    public enum MemberSource {
+        DYNAMIC("DYNAMIC"), APPOINT("APPOINT");
+        private final String text;
+
+        private MemberSource(String text) {
+            this.text = text;
+        }
+
+        public String getText() {
+            return text;
+        }
+    }
+
     /**
      * 主键
      */
@@ -39,13 +65,15 @@ public class GroupMember extends BaseModel {
     /**
      * 关联的类型, ORGANIZATION:组织,POSITION:岗位,USER:用户
      */
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private String referType;
+    private ReferType referType;
     /**
      * 来源
      */
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private String memberSource;
+    private MemberSource memberSource;
 
     /**
      * 如果referType是岗位就在这个列中加这个岗位所在的部门ID
@@ -89,19 +117,19 @@ public class GroupMember extends BaseModel {
         this.referId = referId;
     }
 
-    public String getReferType() {
+    public ReferType getReferType() {
         return referType;
     }
 
-    public void setReferType(String referType) {
+    public void setReferType(ReferType referType) {
         this.referType = referType;
     }
 
-    public String getMemberSource() {
+    public MemberSource getMemberSource() {
         return memberSource;
     }
 
-    public void setMemberSource(String memberSource) {
+    public void setMemberSource(MemberSource memberSource) {
         this.memberSource = memberSource;
     }
 
