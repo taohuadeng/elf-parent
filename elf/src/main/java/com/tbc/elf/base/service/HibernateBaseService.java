@@ -198,6 +198,10 @@ public class HibernateBaseService {
         this.getSession().flush();
     }
 
+    public void update(Object model) {
+        this.getSession().update(model);
+    }
+
     /**
      * 查询某列的最大值id
      *

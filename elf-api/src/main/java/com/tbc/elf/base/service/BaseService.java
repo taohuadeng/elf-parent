@@ -58,9 +58,8 @@ public interface BaseService<T> {
      * 未设置的值，会保留数据库原有值，设置的值为被更新成新值。
      *
      * @param model 要更新的实体。
-     * @return 实体主键
      */
-    String update(T model);
+    void update(T model);
 
     /**
      * 根据hql获取对应实体集合
