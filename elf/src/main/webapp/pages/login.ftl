@@ -8,6 +8,10 @@
 <form action="${rc.contextPath}/spring_security_login" method="post">
     <table>
         <tr>
+            <td>公司编号：</td>
+            <td><input type="text" name="corpCode"/></td>
+        </tr>
+        <tr>
             <td>用户名：</td>
             <td><input type="text" name="j_username"/></td>
         </tr>

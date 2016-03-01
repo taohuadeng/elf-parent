@@ -27,4 +27,14 @@ public interface ElfConstant {
      * 点
      */
     String DOT = ".";
+
+    /**
+     * 公司编号
+     */
+    String CORP_CODE = "corpCode";
+
+    /**
+     * 登录用户名
+     */
+    String J_USERNAME = "j_username";
 }

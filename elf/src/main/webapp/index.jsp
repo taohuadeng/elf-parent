@@ -1,1 +1,1 @@
-<%response.sendRedirect("basic/login");%>
+<%response.sendRedirect("login/login");%>

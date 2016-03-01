@@ -6,30 +6,71 @@
            http://www.springframework.org/schema/security
            http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
-    <http security="none" pattern="/index.jsp"/>
+    <!--<http security="none" pattern="/index.jsp"/>
     <http auto-config="true" entry-point-ref="formAuthenticationEntryPoint"
           access-decision-manager-ref="accessDecisionManager"
           access-denied-page="${authentication-failure-url}">
 
         <intercept-url pattern="${login-page-url}" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
 
-        <!-- 自定义过滤器配置 -->
+        &lt;!&ndash; 自定义过滤器配置 &ndash;&gt;
         <custom-filter ref="filterSecurityInterceptor" before="FILTER_SECURITY_INTERCEPTOR"/>
         <custom-filter ref="logoutFilter" before="LOGOUT_FILTER"/>
 
-        <!-- 登录配置 -->
+        &lt;!&ndash; 登录配置 &ndash;&gt;
         <form-login login-page="${login-page-url}" login-processing-url="${login-processing-url}"
                     always-use-default-target="false"
                     default-target-url="${default-target-url}"
                     authentication-failure-url="${authentication-failure-url}"/>
 
-        <!-- 登出配置 -->
+        &lt;!&ndash; 登出配置 &ndash;&gt;
         <logout invalidate-session="true" logout-url="${logout-url}" logout-success-url="${login-page-url}" />
 
         <session-management>
             <concurrency-control max-sessions="1" error-if-maximum-exceeded="false"/>
         </session-management>
+    </http>-->
+
+    <http security="none" pattern="/basic/checkLogin"/>
+    <http entry-point-ref="formAuthenticationEntryPoint"
+          access-decision-manager-ref="accessDecisionManager">
+        <!-- 替换默认的LogoutFilter -->
+        <!--<custom-filter ref="customLogoutFilter" position="LOGOUT_FILTER"/>-->
+        <!-- 自定义过滤器配置 -->
+        <custom-filter ref="filterSecurityInterceptor" before="FILTER_SECURITY_INTERCEPTOR"/>
+        <custom-filter ref="logoutFilter" before="LOGOUT_FILTER"/>
+        <!-- 替换默认的LoginFilter -->
+        <custom-filter ref="customLoginFilter" position="FORM_LOGIN_FILTER"/>
+        <!-- 登出配置 -->
+        <logout invalidate-session="true" logout-url="${logout-url}" logout-success-url="${login-page-url}"/>
+
+        <session-management>
+            <concurrency-control max-sessions="1" error-if-maximum-exceeded="false"/>
+        </session-management>
     </http>
+
+    <beans:bean id="customLoginFilter" class="com.tbc.elf.base.security.filter.CustomLoginFilter">
+        <!-- 校验登录是否有效的虚拟url -->
+        <beans:property name="filterProcessesUrl" value="${login-processing-url}"/>
+        <beans:property name="authenticationManager" ref="authenticationManager"/>
+        <!--<beans:property name="usernameParameter" value="username"/>
+        <beans:property name="passwordParameter" value="password"/>-->
+        <beans:property name="authenticationSuccessHandler">
+            <!-- 自定义登录成功后的处理handler -->
+            <beans:bean class="com.tbc.elf.base.security.filter.CustomLoginHandler">
+                <!-- 登录成功后的默认url -->
+                <beans:property name="defaultTargetUrl" value="${default-target-url}"/>
+            </beans:bean>
+        </beans:property>
+        <!--<beans:property name="authenticationFailureHandler" ref="authFailure">-->
+        <beans:property name="authenticationFailureHandler">
+            <beans:bean
+                    class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
+                <!-- 登录失败后的默认Url -->
+                <beans:property name="defaultFailureUrl" value="${login-page-url}"/>
+            </beans:bean>
+        </beans:property>
+    </beans:bean>
 
     <!-- 认证管理器 -->
     <authentication-manager alias="authenticationManager">

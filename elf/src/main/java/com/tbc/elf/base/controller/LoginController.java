@@ -1,26 +1,71 @@
 package com.tbc.elf.base.controller;
 
+import com.tbc.elf.app.uc.model.Login;
+import com.tbc.elf.app.uc.service.LoginService;
+import com.tbc.elf.base.security.model.LoginVo;
+import com.tbc.elf.base.util.MD5Util;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * 处理登录：控制登录流程
+ *
+ * @author ELF@TEAM
+ * @since 2016年2月23日17:03:00
+ */
 @Controller
-@RequestMapping("/basic/*")
+@RequestMapping("/login/*")
 public class LoginController {
+    private Log LOG = LogFactory.getLog(LoginController.class);
 
-    private Log logger = LogFactory.getLog(LoginController.class);
+    @Resource
+    private LoginService loginService;
 
     @InitBinder
     protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws Exception {
         binder.registerCustomEditor(String.class, new StringTrimmerEditor(false));// 去掉空格
+    }
+
+    @ResponseBody
+    @RequestMapping("/checkLogin")
+    public ModelMap checkLogin(LoginVo login) throws Exception {
+        String corpCode = login.getCorpCode();
+
+        ModelMap map = new ModelMap();
+        map.put("success", false);
+        if (!"default".equals(corpCode)) {
+            map.put("msg", "公司不存在!");
+            return map;
+        }
+
+        String username = login.getJ_username();
+        String password = loginService.getPasswordByLoginAndCorpCode(username, corpCode);
+        if (StringUtils.isEmpty(password)) {
+            map.put("msg", "用户名不存在!");
+            return map;
+        }
+
+        String loginPassword = login.getJ_password();
+        if (StringUtils.isEmpty(loginPassword) || !password.equals(MD5Util.md5(loginPassword))) {
+            map.put("msg", "密码错误!");
+            return map;
+        }
+        
+        map.put("success", true);
+        return map;
     }
 
     /**
@@ -33,12 +78,6 @@ public class LoginController {
      */
     @RequestMapping("/login")
     public ModelAndView login(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        if (logger.isDebugEnabled()) {
-            logger.debug("进入【浦发银行投诉管理】登录页面！");
-        }
-
-        logger.info("进入【浦发银行投诉管理】登录页面！");
-        logger.debug("进入【浦发银行投诉管理】登录页面！");
         return new ModelAndView("/login");
     }
 

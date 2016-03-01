@@ -1,6 +1,5 @@
 package com.tbc.elf.base.security.util;
 
-import com.tbc.elf.app.uc.model.Organization;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.security.access.AccessDecisionManager;
@@ -14,7 +13,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * 此工具类可以方便获取当前用户信息、所属机构、权限等
@@ -56,7 +54,7 @@ public class AuthenticationUtil {
     /**
      * 设置当前用户Model
      */
-    public static void setMyUserDetails(ELFUserDetails ELFUserDetails) {
+    public static void setUserDetails(ELFUserDetails ELFUserDetails) {
         ELFUserDetailsHolder.set(ELFUserDetails);
     }
 
@@ -77,14 +75,26 @@ public class AuthenticationUtil {
      * 取得当前用户所在公司
      */
     public static String getCorpCode() {
-        /*String result = null;
+        String result = null;
         ELFUserDetails userDetails = getUserDetails();
         if (userDetails != null) {
             result = userDetails.getCorpCode();
         }
 
-        return result;*/
-        return "default";
+        return result;
+    }
+
+    /**
+     * 取得当前用户所在公司
+     */
+    public static void setCorpCode(String corpCode) {
+        ELFUserDetails userDetails = getUserDetails();
+        if (userDetails == null) {
+            userDetails = new ELFUserDetails();
+        }
+
+        userDetails.setCorpCode(corpCode);
+        setUserDetails(userDetails);
     }
 
     /**
