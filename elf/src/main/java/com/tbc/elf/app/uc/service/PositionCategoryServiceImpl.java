@@ -43,7 +43,8 @@ public class PositionCategoryServiceImpl extends BaseServiceImpl<PositionCategor
         if (StringUtils.isEmpty(positionCategory.getPositionCategoryId())) {
             id = super.save(positionCategory);
         }else{
-            id = super.update(positionCategory);
+            super.update(positionCategory);
+            id = positionCategory.getPositionCategoryId();
         }
 
         String idPath = StringUtils.isEmpty(parentId) ? id : parent.getIdPath() + ElfConstant.DOT + id;

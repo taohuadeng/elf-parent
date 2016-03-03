@@ -56,8 +56,8 @@ public class BaseServiceImpl<T> implements BaseService<T> {
     }
 
     @Override
-    public String update(T model) {
-        return null;
+    public void update(T model) {
+        baseService.update(model);
     }
 
     @Override
