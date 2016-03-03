@@ -37,4 +37,15 @@ public interface ElfConstant {
      * 登录用户名
      */
     String J_USERNAME = "j_username";
+
+    //申请加入
+    String GROUP_JOIN_REQ_TYPE_REQUEST = "REQUEST";
+    String GROUP_STATUS_ACTIVE = "ACTIVE"; //启用
+    String VID_OPEN = "OPEN"; //开放
+    String VID_DYNAMIC = "DYNAMIC"; //条件
+    String VID_APPOINT = "APPOINT"; //不开放
+    String VID_VALIDATE = "VALIDATE"; //验证
+    //已通过申请加入
+    String GROUP_JOIN_REQ_TYPE_ACCEPT = "ACCEPT";
+
 }
