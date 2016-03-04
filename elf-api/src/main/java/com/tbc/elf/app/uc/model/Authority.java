@@ -72,13 +72,13 @@ public class Authority extends BaseModel {
     @Cascade(value = CascadeType.SAVE_UPDATE)
     private Authority parentAuthority;
 
-    @OneToMany(mappedBy = "parentAuthority")
+    /*@OneToMany(mappedBy = "parentAuthority")
     @Cascade(value = CascadeType.SAVE_UPDATE)
     private List<Authority> childAuthorities = new ArrayList<Authority>();
 
     @ManyToMany(mappedBy = "authorities")
     @Cascade(value = CascadeType.SAVE_UPDATE)
-    public List<Role> roles = new ArrayList<Role>();
+    public List<Role> roles = new ArrayList<Role>();*/
 
     public String getAuthorityId() {
         return authorityId;
@@ -128,7 +128,7 @@ public class Authority extends BaseModel {
         this.parentAuthority = parentAuthority;
     }
 
-    public List<Authority> getChildAuthorities() {
+    /*public List<Authority> getChildAuthorities() {
         return childAuthorities;
     }
 
@@ -142,5 +142,5 @@ public class Authority extends BaseModel {
 
     public void setRoles(List<Role> roles) {
         this.roles = roles;
-    }
+    }*/
 }

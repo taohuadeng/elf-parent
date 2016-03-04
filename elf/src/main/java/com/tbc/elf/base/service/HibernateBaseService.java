@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.hibernate4.HibernateTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
@@ -129,6 +130,7 @@ public class HibernateBaseService {
      * @param value
      * @return
      */
+    @Transactional(readOnly = true)
     public List find(String queryString, Object[] value) {
         Query query = this.getSession().createQuery(queryString);
         if (value != null) {
@@ -172,6 +174,22 @@ public class HibernateBaseService {
 
     public String save(Object model) {
         return (String) this.getSession().save(model);
+    }
+
+    public <T> List<String> bathSave(List<T> models) {
+        List<String> modelIds = new ArrayList<String>(models.size());
+        Session session = this.getSession();
+        for (int i = 0; i < models.size(); i++) {
+            Object model = models.get(i);
+            String modelId = (String) session.save(model);
+            modelIds.add(modelId);
+            if (i % 100 == 0) {
+                session.flush();
+                session.clear();
+            }
+        }
+
+        return modelIds;
     }
 
     public <T> void delete(Class<T> entityClass, Serializable id) {
