@@ -48,9 +48,8 @@ public class Login extends BaseModel {
     /**
      * 用户主键
      */
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(nullable = false, length = 32)
+    private String userId;
 
     /**
      * 登录帐号
@@ -66,12 +65,6 @@ public class Login extends BaseModel {
     private Date registerTime;
 
     /**
-     * 是否在线
-     */
-    @Column
-    private boolean onLine;
-
-    /**
      * 登录(初始)密码
      */
     @Column(nullable = false, length = 50)
@@ -80,15 +73,9 @@ public class Login extends BaseModel {
     /**
      * 状态(激活，禁用，注册未审批)
      */
-    @Column(nullable = false, length = 50)
-    private String accountStatus;
-
-    /**
-     * 帐号类型(可登录和非登录帐号)
-     */
-    @Column(nullable = false, length = 32)
+    @Column(nullable = false, length = 10)
     @Enumerated(EnumType.STRING)
-    private AccountStatus accountType;
+    private AccountStatus accountStatus;
 
     /**
      * 上次登录时间
@@ -163,12 +150,12 @@ public class Login extends BaseModel {
         this.loginId = loginId;
     }
 
-    public User getUser() {
-        return user;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getLoginName() {
@@ -187,14 +174,6 @@ public class Login extends BaseModel {
         this.registerTime = registerTime;
     }
 
-    public boolean isOnLine() {
-        return onLine;
-    }
-
-    public void setOnLine(boolean onLine) {
-        this.onLine = onLine;
-    }
-
     public String getPassword() {
         return password;
     }
@@ -203,20 +182,12 @@ public class Login extends BaseModel {
         this.password = password;
     }
 
-    public String getAccountStatus() {
+    public AccountStatus getAccountStatus() {
         return accountStatus;
     }
 
-    public void setAccountStatus(String accountStatus) {
+    public void setAccountStatus(AccountStatus accountStatus) {
         this.accountStatus = accountStatus;
-    }
-
-    public AccountStatus getAccountType() {
-        return accountType;
-    }
-
-    public void setAccountType(AccountStatus accountType) {
-        this.accountType = accountType;
     }
 
     public Date getLastLoginTime() {

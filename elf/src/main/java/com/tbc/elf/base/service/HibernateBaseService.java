@@ -1,13 +1,20 @@
 package com.tbc.elf.base.service;
 
-import org.hibernate.Criteria;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import com.tbc.elf.base.util.HqlBuilder;
+import com.tbc.elf.base.util.SqlBuilder;
+import net.sf.ehcache.hibernate.HibernateUtil;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
+import org.hibernate.*;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
+import org.hibernate.metadata.ClassMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.ColumnMapRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.orm.hibernate4.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,8 +22,12 @@ import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 @SuppressWarnings("unchecked")
@@ -123,6 +134,7 @@ public class HibernateBaseService {
         return query.list();
     }
 
+
     /**
      * 使用带参数的HSQL语句检索数据
      *
@@ -165,7 +177,7 @@ public class HibernateBaseService {
     }
 
     public <T> T merge(T model) {
-        return (T)this.getSession().merge(model);
+        return (T) this.getSession().merge(model);
     }
 
     public void saveOrUpdate(Object model) {
@@ -176,7 +188,7 @@ public class HibernateBaseService {
         return (String) this.getSession().save(model);
     }
 
-    public <T> List<String> bathSave(List<T> models) {
+    public <T> List<String> batchSave(List<T> models) {
         List<String> modelIds = new ArrayList<String>(models.size());
         Session session = this.getSession();
         for (int i = 0; i < models.size(); i++) {
@@ -192,6 +204,18 @@ public class HibernateBaseService {
         return modelIds;
     }
 
+    public <T> void batchSaveOrUpdate(List<T> models) {
+        Session session = this.getSession();
+        for (int i = 0; i < models.size(); i++) {
+            Object model = models.get(i);
+            session.saveOrUpdate(model);
+            if (i % 100 == 0) {
+                session.flush();
+                session.clear();
+            }
+        }
+    }
+
     public <T> void delete(Class<T> entityClass, Serializable id) {
         this.getSession().delete(get(entityClass, id));
     }
@@ -202,6 +226,10 @@ public class HibernateBaseService {
 
     public void flush() {
         this.getSession().flush();
+    }
+
+    public void update(Object model) {
+        this.getSession().update(model);
     }
 
     /**
@@ -292,4 +320,130 @@ public class HibernateBaseService {
         return (T) query.uniqueResult();
     }
 
+    /**
+     * 查询一组数据
+     *
+     * @param hqlBuilder hqlBuilder
+     * @return 查询结果列表
+     */
+    public <T> List<T> queryList(HqlBuilder hqlBuilder) {
+        Query query = this.getSession().createQuery(hqlBuilder.getSql());
+        setParameter(hqlBuilder, query);
+        return query.list();
+    }
+
+    /**
+     * 查询单个数据
+     *
+     * @param hqlBuilder hqlBuilder
+     * @return 查询结果
+     */
+    public <T> T queryUniqueResult(HqlBuilder hqlBuilder) {
+        Query query = this.getSession().createQuery(hqlBuilder.getSql());
+        setParameter(hqlBuilder, query);
+        return (T) query.uniqueResult();
+    }
+
+    /**
+     * 执行更新的hql
+     *
+     * @param hqlBuilder hqlBuilder
+     * @return 返回更新数据的条数
+     */
+    public int executeUpdate(HqlBuilder hqlBuilder) {
+        Query query = this.getSession().createQuery(hqlBuilder.getSql());
+        setParameter(hqlBuilder, query);
+        return query.executeUpdate();
+    }
+
+    /**
+     * 设置hqlBuilder的参数
+     */
+    private void setParameter(HqlBuilder hqlBuilder, Query query) {
+        List<Object> parameterList = hqlBuilder.getParameterList();
+        if (CollectionUtils.isNotEmpty(parameterList)) {
+            for (int i = 0; i < parameterList.size(); i++) {
+                Object obj = parameterList.get(i);
+                query.setParameter(i, obj);
+            }
+        }
+
+        Map<String, Object> parameterMap = hqlBuilder.getParameterMap();
+        if (MapUtils.isNotEmpty(parameterMap)) {
+            for (Map.Entry<String, Object> entry : parameterMap.entrySet()) {
+                String placeHolder = entry.getKey();
+                Object paramValue = entry.getValue();
+                if (paramValue instanceof Collection) {
+                    query.setParameterList(placeHolder, (Collection) paramValue);
+                } else {
+                    query.setParameter(placeHolder, paramValue);
+                }
+            }
+        }
+
+        Integer firstRecordIndex = hqlBuilder.getFirstRecordIndex();
+        if (firstRecordIndex != null && firstRecordIndex >= 0) {
+            query.setFirstResult(firstRecordIndex);
+        }
+
+        Integer maxRecordNum = hqlBuilder.getMaxRecordNum();
+        if (maxRecordNum != null && maxRecordNum > 0) {
+            query.setMaxResults(maxRecordNum);
+        }
+    }
+
+    /**
+     * 根据主键id列表批量删除一组数据
+     *
+     * @param modelIds 主键列表
+     * @param clazz    class对象
+     * @return 删除数据的条数
+     */
+    public int delete(List<String> modelIds, Class clazz) {
+        ClassMetadata classMetadata = hibernateTemplate.getSessionFactory().getClassMetadata(clazz);
+        String idPropertyName = classMetadata.getIdentifierPropertyName();
+        HqlBuilder batchDeleteBuilder = new HqlBuilder();
+        batchDeleteBuilder.append("delete from " + clazz.getSimpleName());
+        batchDeleteBuilder.append("where " + idPropertyName + " in (:modelIds)");
+        batchDeleteBuilder.addParameter("modelIds", modelIds);
+        return executeUpdate(batchDeleteBuilder);
+    }
+
+    /**
+     * <使用SQL查询所需指定类型的结果>
+     *
+     * @param sqlBuilder sql对象
+     * @param entryClass 需要返回的类对象
+     * @param <T>        泛型
+     * @return 查询结果
+     */
+    public <T> List<T> queryBySQL(SqlBuilder sqlBuilder, Class<T> entryClass) {
+        return new NamedParameterJdbcTemplate(getJdbcTemplate().getDataSource())
+                .queryForList(sqlBuilder.getSql(), sqlBuilder.getParameterMap(), entryClass);
+    }
+
+    /**
+     * <使用SQL查询所需指定实体类型的结果>
+     *
+     * @param sqlBuilder sql对象
+     * @param entryClass 需要返回的类对象
+     * @param <T>        泛型
+     * @return 查询结果
+     */
+    public <T> List<T> queryModelBySQL(SqlBuilder sqlBuilder, Class<T> entryClass) {
+        return new NamedParameterJdbcTemplate(getJdbcTemplate().getDataSource())
+                .query(sqlBuilder.getSql(), sqlBuilder.getParameterMap(), BeanPropertyRowMapper.newInstance(entryClass));
+    }
+
+    /**
+     * 批量保存实体方法
+     *
+     * @param entities:实体列表
+     * @param <T>:泛型
+     */
+    public <T> void saveOrUpdateEntityList(List<T> entities) {
+        for (T t : entities) {
+            saveOrUpdate(t);
+        }
+    }
 }

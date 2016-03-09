@@ -79,22 +79,14 @@ public class Organization extends BaseModel {
     /**
      * 组织负责人ID
      */
-    @Column
-    private boolean manageUserId;
+    @Column(length = 32)
+    private String manageUserId;
 
-    @ManyToOne
-    @Cascade(value = org.hibernate.annotations.CascadeType.SAVE_UPDATE)
-    private Organization parentOrganization;
-
-    @OneToMany(mappedBy = "parentOrganization", fetch = FetchType.EAGER)
-    @Cascade(value = org.hibernate.annotations.CascadeType.SAVE_UPDATE)
-    @Fetch(FetchMode.SELECT)
-    private List<Organization> childOrganizations = new ArrayList<Organization>();
-
-    /*@OneToMany(fetch = FetchType.EAGER)
-    @Cascade(value = org.hibernate.annotations.CascadeType.SAVE_UPDATE)
-    @Fetch(FetchMode.SELECT)
-    private List<User> users = new ArrayList<User>();*/
+    /**
+     * 父组织ID
+     */
+    @Column(nullable = false, length = 32)
+    private String parentId;
 
     public String getOrganizationId() {
         return organizationId;
@@ -168,35 +160,19 @@ public class Organization extends BaseModel {
         this.needLimitAccount = needLimitAccount;
     }
 
-    public boolean isManageUserId() {
+    public String isManageUserId() {
         return manageUserId;
     }
 
-    public void setManageUserId(boolean manageUserId) {
+    public void setManageUserId(String manageUserId) {
         this.manageUserId = manageUserId;
     }
 
-    public Organization getParentOrganization() {
-        return parentOrganization;
+    public String getParentId() {
+        return parentId;
     }
 
-    public void setParentOrganization(Organization parentOrganization) {
-        this.parentOrganization = parentOrganization;
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
-
-    public List<Organization> getChildOrganizations() {
-        return childOrganizations;
-    }
-
-    public void setChildOrganizations(List<Organization> childOrganizations) {
-        this.childOrganizations = childOrganizations;
-    }
-
-    /*public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }*/
 }

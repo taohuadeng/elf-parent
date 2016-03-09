@@ -3,10 +3,7 @@ package com.tbc.elf.app.uc.model;
 import com.tbc.elf.base.model.BaseModel;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * 用户部门更改日志表
@@ -14,6 +11,7 @@ import javax.persistence.Table;
  * @author ELF@TEAM
  * @since 2016年2月23日17:03:00
  */
+@Entity
 @Table(name = "t_uc_user_org_change_log")
 public class UserOrgChangeLog extends BaseModel {
 

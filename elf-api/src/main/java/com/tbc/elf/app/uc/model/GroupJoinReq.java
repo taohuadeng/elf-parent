@@ -1,5 +1,6 @@
 package com.tbc.elf.app.uc.model;
 
+import com.tbc.elf.base.model.BaseModel;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -12,7 +13,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "t_uc_group_join_req")
-public class GroupJoinReq {
+public class GroupJoinReq extends BaseModel{
     /**
      * 主键
      */

@@ -1,62 +1,53 @@
 package com.tbc.elf.app.uc;
 
 import com.tbc.elf.app.uc.model.Authority;
+import com.tbc.elf.app.uc.model.Role;
+import com.tbc.elf.app.uc.model.RoleAuthorities;
+import com.tbc.elf.app.uc.model.UserRoles;
 import com.tbc.elf.app.uc.service.RoleService;
 import com.tbc.elf.base.BaseTests;
 import com.tbc.elf.base.service.HibernateBaseService;
-import com.tbc.elf.base.util.UUIDGenerator;
 import org.junit.Test;
 import org.springframework.test.annotation.Rollback;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 public class RoleServiceTest extends BaseTests {
     @Resource
-    private HibernateBaseService baseService;
-    @Resource
     private RoleService roleService;
+    @Resource
+    private HibernateBaseService baseService;
 
     @Test
     @Rollback(false)
-    public void test() {
-        long cu = System.currentTimeMillis();
-        System.out.println(cu);
-        List<Authority> authorities = new ArrayList<Authority>();
-        for (int i = 0; i < 500000; i++) {
-            String uuid = UUIDGenerator.uuid();
-            Authority authority = new Authority();
-            authority.setSourceUrl("url-" + i);
-            authority.setSourceName("name-" + i);
-            authority.setShowOrder(i + 1);
-            authority.setCorpCode("default");
-            authority.setCreateBy(uuid);
-            authority.setAuthorityType(Authority.AuthorityType.SYSTEM);
-            authority.setLastModifyBy(uuid);
-            authority.setCreateTime(new Date());
-            authority.setLastModifyTime(new Date());
-            authorities.add(authority);
-            //baseService.save(authority);
-        }
+    public void testSaveUserRoles() {
+        UserRoles userRoles = new UserRoles();
+        userRoles.setUserId("uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu");
+        userRoles.setRoleId("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
 
-        baseService.bathSave(authorities);
-        System.out.println("costs:" + (System.currentTimeMillis() - cu));
-
-//        String hql = "from Role role,Authority auth where role.roleId = '1234'";
-//        List list = baseService.find(hql, null);
+        baseService.save(userRoles);
     }
 
     @Test
-    public void get() {
-        long cu = System.currentTimeMillis();
-        System.out.println(cu);
+    public void testSaveRole() {
+        Role role = new Role();
+        role.setRoleName("考试管理");
+        role.setRoleType(Role.RoleType.SYSTEM);
+        role.setComments("具有考试管理的所有权限");
+        UserRoles userRoles = new UserRoles();
+        userRoles.setUserId("uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu");
+        userRoles.setRoleId("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
 
-        System.out.println("costs:" + (System.currentTimeMillis() - cu));
+        String roleId = roleService.save(role);
 
-        String hql = "from Authority";
-        List list = baseService.find(hql, null);
-        System.out.println("costs:" + (System.currentTimeMillis() - cu));
+        RoleAuthorities roleAuthorities = new RoleAuthorities();
+        roleAuthorities.setRoleId(roleId);
+        roleAuthorities.setAuthorityId("297ea177531873b801531873c21f0000");
+        baseService.save(roleAuthorities);
+
+        RoleAuthorities roleAuthorities2 = new RoleAuthorities();
+        roleAuthorities2.setRoleId(roleId);
+        roleAuthorities2.setAuthorityId("297ea1775318750c0153187515830000");
+        baseService.save(roleAuthorities2);
     }
 }

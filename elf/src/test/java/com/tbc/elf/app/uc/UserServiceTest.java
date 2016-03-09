@@ -9,7 +9,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
 import org.junit.Test;
-import redis.clients.jedis.JedisCommands;
 
 import javax.annotation.Resource;
 import java.util.Date;

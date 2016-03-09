@@ -2,13 +2,15 @@ package com.tbc.elf.app.uc.model;
 
 import com.tbc.elf.base.model.BaseModel;
 import org.hibernate.annotations.*;
-import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.hibernate.annotations.CascadeType.*;
 
 /**
  * 系统角色表
@@ -19,6 +21,7 @@ import java.util.List;
 @Entity
 @Table(name = "t_uc_role",
         uniqueConstraints = {@UniqueConstraint(columnNames = {"corpCode", "roleName"})})
+@DynamicUpdate(true)
 public class Role extends BaseModel {
     /**
      * 角色类型
@@ -65,7 +68,10 @@ public class Role extends BaseModel {
     private RoleType roleType;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @Cascade(value = CascadeType.SAVE_UPDATE)
+    @JoinTable(name = "t_uc_role_authorities",
+            joinColumns = {@JoinColumn(name = "role_id")},
+            inverseJoinColumns = {@JoinColumn(name = "authority_id")})
+    @Cascade(value = {SAVE_UPDATE})
     @Fetch(FetchMode.SELECT)
     public List<Authority> authorities = new ArrayList<Authority>();
 
@@ -107,5 +113,20 @@ public class Role extends BaseModel {
 
     public void setAuthorities(List<Authority> authorities) {
         this.authorities = authorities;
+    }
+
+    public void removeAuthority(Authority authority) {
+        if (authority != null) {
+            authority.getRoles().remove(this);
+            this.getAuthorities().remove(authority);
+        }
+    }
+
+    public void clearAuthorities() {
+        for (Authority authority : this.getAuthorities()) {
+            authority.getRoles().remove(this);
+        }
+
+        this.getAuthorities().clear();
     }
 }
