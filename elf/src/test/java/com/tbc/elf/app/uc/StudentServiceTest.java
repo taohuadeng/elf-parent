@@ -72,6 +72,10 @@ public class StudentServiceTest extends BaseTests {
             Student student = new Student();
             student.setId(i + "");
             student.setName(i + "");
+            student.setName1(i+"");
+            student.setName2(i+"");
+            student.setName3(i+"");
+            student.setName4(i+"");
             students.add(student);
         }
         Date d = new Date();
