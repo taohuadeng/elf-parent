@@ -77,7 +77,7 @@ public class Authority extends BaseModel {
     private String parentId;
 
     @ManyToMany(mappedBy = "authorities", fetch = FetchType.EAGER)
-    //@Cascade(value = CascadeType.SAVE_UPDATE)
+    @Cascade(value = CascadeType.SAVE_UPDATE)
     public List<Role> roles = new ArrayList<Role>();
 
     public String getAuthorityId() {

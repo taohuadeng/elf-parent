@@ -70,20 +70,20 @@ public interface BaseService<T> {
      */
     List<T> listByHQL(String hql, Object[] value);
 
-//    /**
-//     * 批量保存实体
-//     *
-//     * @param models 实体集合
-//     * @param <T>    实体类型
-//     * @return 保存成功的主键
-//     */
-//    <T> List<String> batchSave(List<T> models);
-//
-//    /**
-//     * 批量保存或更新实体
-//     *
-//     * @param models 实体集合
-//     * @param <T>    实体类型
-//     */
-//    <T> void batchSaveOrUpdate(List<T> models);
+    /**
+     * 批量保存实体
+     *
+     * @param models 实体集合
+     * @param <T>    实体类型
+     * @return 保存成功的主键
+     */
+    <T> List<String> batchSave(List<T> models);
+
+    /**
+     * 批量保存或更新实体
+     *
+     * @param models 实体集合
+     * @param <T>    实体类型
+     */
+    <T> void batchSaveOrUpdate(List<T> models);
 }

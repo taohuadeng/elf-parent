@@ -68,19 +68,19 @@ public class BaseServiceImpl<T> implements BaseService<T> {
         return baseService.find(hql, value);
     }
 
-//    @Override
-//    @Transactional(readOnly = false, isolation = Isolation.READ_COMMITTED)
-//    public <T> List<String> batchSave(List<T> models) {
-//        Assert.notNull(models, "Models is null!");
-//
-//        return baseService.batchSave(models);
-//    }
-//
-//    @Override
-//    @Transactional(readOnly = false, isolation = Isolation.READ_COMMITTED)
-//    public <T> void batchSaveOrUpdate(List<T> models) {
-//        Assert.notNull(models, "Models is null!");
-//
-//        baseService.saveOrUpdate(models);
-//    }
+    @Override
+    @Transactional(readOnly = false, isolation = Isolation.READ_COMMITTED)
+    public <T> List<String> batchSave(List<T> models) {
+        Assert.notNull(models, "Models is null!");
+
+        return baseService.batchSave(models);
+    }
+
+    @Override
+    @Transactional(readOnly = false, isolation = Isolation.READ_COMMITTED)
+    public <T> void batchSaveOrUpdate(List<T> models) {
+        Assert.notNull(models, "Models is null!");
+
+        baseService.batchSaveOrUpdate(models);
+    }
 }
