@@ -17,6 +17,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.orm.hibernate4.HibernateTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
@@ -31,6 +32,7 @@ import java.util.Map;
 
 @Repository
 @SuppressWarnings("unchecked")
+@Service("hibernateBaseService")
 public class HibernateBaseService {
     private HibernateTemplate hibernateTemplate;
 
@@ -172,6 +174,7 @@ public class HibernateBaseService {
         return (T) result;
     }
 
+    @Transactional
     public <T> T load(Class<T> entityClass, Serializable id) {
         return (T) getHibernateTemplate().load(entityClass, id);
     }
