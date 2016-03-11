@@ -32,7 +32,7 @@ import java.util.Map;
 
 @Repository
 @SuppressWarnings("unchecked")
-@Service("hibernateBaseService")
+/*@Service("hibernateBaseService")*/
 public class HibernateBaseService {
     private HibernateTemplate hibernateTemplate;
 

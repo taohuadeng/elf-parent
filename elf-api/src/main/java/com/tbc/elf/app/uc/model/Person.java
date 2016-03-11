@@ -20,7 +20,7 @@ public class Person {
     @Column(nullable = false,length = 50)
     private String sex;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "cardId")
     private Card card;
 
