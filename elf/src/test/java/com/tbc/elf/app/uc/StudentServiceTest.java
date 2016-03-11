@@ -12,9 +12,7 @@ import org.openxmlformats.schemas.drawingml.x2006.main.STAdjAngle;
 import org.springframework.test.annotation.Rollback;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author YangLiBo@HF
@@ -28,61 +26,160 @@ public class StudentServiceTest extends BaseTests {
 
     private Log LOG = LogFactory.getLog(StudentServiceTest.class);
 
-    @Test
-    @Rollback(false)
-    public void testSingleMTO() {
-        Set<Student> students = new HashSet<Student>(2);
-        Student student = new Student();
-        student.setId("y123456");
-        student.setName("n123456");
-        students.add(student);
-
-        studentService.save(student);
-        Student student1 = new Student();
-        student1.setId("y222456");
-        student1.setName("n222456");
-        students.add(student1);
-        studentService.save(student1);
-        Teacher teacher = new Teacher();
-        teacher.setTeacherId("t11456");
-        teacher.setName("tn145");
-        teacher.setStudents(students);
-        teacherService.save(teacher);
-
-
-    }
+    /**
+     * ****************************************************************************************
+     * <p/>
+     * 单向一对多使用 @OneToMany,使用@JoinColumn(name="表中的字段名")表示关联"many"方的字段
+     * 使用 @Casecade注解表示使用的级联操作类型，例如CasecadeType.SAVE_UPDATE表示更新级联操作
+     * 使用 @Fetch表示查询多方使用的抓取方式，例如FetchModel.SELECT(发出另外一条查询语句)
+     * 注：单向一对多不建议使用，因为会在建立两者关系的时候产生多条update语句
+     * <p/>
+     * *****************************************************************************************
+     */
 
     @Test
-    public void testDoubleMTO() {
-        LOG.warn("+++++++++++++++++++++++++++++++++++");
-        /*Teacher teacher = teacherService.load("1");
-        teacher.getStudents();
-        System.out.println(teacher);*/
-        Student student = studentService.get("3");
-
-
-        LOG.warn("+++++++++++++++++++++++++++++++++++");
-        //studentService.update(student);
-    }
-
-    @Test
-    public void testBatchSaveOrUpdate() {
-        Set<Student> students = new HashSet<Student>(100);
-        for (int i = 0; i < 1000000; i++) {
+    /**
+     * 测试单向一对多方法。
+     * 找到 Student类，并找到teacher变量，按照提示操作之后，再运行此测试方法
+     */
+    @Rollback(false)//事务不回滚
+    public void testOSaveOrUpdate() {
+        List<Student> students = new ArrayList<Student>(3);
+        for (int i = 0; i < 3; i++) {
             Student student = new Student();
-            student.setId(i + "");
-            student.setName(i + "");
-            student.setName1(i+"");
-            student.setName2(i+"");
-            student.setName3(i+"");
-            student.setName4(i+"");
+            student.setId("i" + i);
+            student.setName("i" + i);
+            student.setName1("i" + i);
+            student.setName2("i" + i);
+            student.setName3("i" + i);
+            student.setName4("i" + i);
             students.add(student);
         }
-        Date d = new Date();
-        LOG.warn("----------------------------------------------------" + d.getTime());
-        Date d1 = new Date();
-        LOG.warn("++++++++++++++++++++++++++++++++++++++++++++++++++++" + (d1.getTime() - d.getTime()));
+        studentService.batchSave(students);
+        Teacher teacher = new Teacher();
+        teacher.setName("t1");
+        teacher.setTeacherId("t1");
+        teacher.setStudents(new HashSet<Student>(students));
+        teacherService.save(teacher);
     }
 
+    @Test
+    /**
+     * 测试单向一对多删除方法。
+     * 删除时，如果te
+     */
+    @Rollback(false)//事务不回滚
+    public void testODelete() {
+      /*  //单独删除学生
+        studentService.delete("i0");*/
+        //删除老师
+        teacherService.delete("t1");
+    }
+
+
+    /**
+     * ****************************************************************************************
+     * <p/>
+     * 单向多对一使用 @ManyToOne,使用@JoinColumn(name="表中的字段名")表示关联"one"方的字段
+     * 使用 @Casecade注解表示使用的级联操作类型，例如CasecadeType.SAVE_UPDATE表示更新级联操作
+     * 使用 @Fetch表示查询多方使用的抓取方式，例如FetchModel.SELECT(发出另外一条查询语句)
+     * <p/>
+     * <p/>
+     * *****************************************************************************************
+     */
+
+    @Test
+    /**
+     * 测试单向一对多方法。
+     * 找到 Student类，并找到teacher变量，按照提示操作之后，再运行此测试方法
+     */
+    @Rollback(false)
+    public void testMSaveOrUpdate() {
+        Teacher teacher = new Teacher();
+        teacher.setName("t2");
+        teacher.setTeacherId("t2");
+        ;
+        teacherService.save(teacher);
+        List<Student> students = new ArrayList<Student>(3);
+        for (int i = 6; i < 9; i++) {
+            Student student = new Student();
+            student.setId("i" + i);
+            student.setName("i" + i);
+            student.setName1("i" + i);
+            student.setName2("i" + i);
+            student.setName3("i" + i);
+            student.setName4("i" + i);
+            student.setTeacher(teacher);
+            students.add(student);
+        }
+        studentService.batchSave(students);
+
+    }
+
+    @Test
+    /**
+     * 测试单向一对多删除方法。
+     * 删除时，如果te
+     */
+    @Rollback(false)//事务不回滚
+    public void testMDelete() {
+        //单独删除学生
+        studentService.delete("i7");
+    /*    //删除老师
+        teacherService.delete("t1");*/
+    }
+
+
+    /*******************************************************************************************
+     *
+     * 双向一对多使用@OneToMany(一方) @ManyToOne(多方)
+     *
+     * 更详细信息可以在Student(many)类和teacher(one)类中查找
+     *
+     *
+     * *****************************************************************************************
+     */
+
+
+     @Test
+    /**
+     * 测试双向一对多方法。
+     * 找到 Student类，并找到teacher变量，按照提示操作之后，再运行此测试方法
+     */
+    @Rollback(false)
+    public void testDSaveOrUpdate() {
+        Teacher teacher = new Teacher();
+        teacher.setName("t2");
+        teacher.setTeacherId("t2");
+        ;
+        teacherService.save(teacher);
+        List<Student> students = new ArrayList<Student>(3);
+        for (int i = 6; i < 9; i++) {
+            Student student = new Student();
+            student.setId("i" + i);
+            student.setName("i" + i);
+            student.setName1("i" + i);
+            student.setName2("i" + i);
+            student.setName3("i" + i);
+            student.setName4("i" + i);
+            student.setTeacher(teacher);
+            students.add(student);
+        }
+        studentService.batchSave(students);
+
+    }
+
+    @Test
+    /**
+     * 测试双向一对多删除方法。
+     * 删除时，如果te
+     */
+    @Rollback(false)//事务不回滚
+    public void testDDelete() {
+        //单独删除学生
+        studentService.delete("i7");
+    /*    //删除老师
+        teacherService.delete("t1");*/
+    }
 
 }

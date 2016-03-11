@@ -1,10 +1,11 @@
 package com.tbc.elf.app.uc.model;
 
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 
 /**
@@ -35,9 +36,15 @@ public class Student {
 
     @Column(name = "name4", length = 32)
     private String name4;
-    /*@ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "teacher_id")*/
-    @Transient
+
+    //若配置为单向一对多或者双向一对多时，使用1下面的注解，否则使用2下面的注解
+    //并将另外一个编号的注解注释掉。
+    //1
+    @ManyToOne(fetch=FetchType.LAZY)//fetch表示何时抓取关联的"one"方的数据，默认为eager(立即)
+    @JoinColumn(name = "teacher_id")
+    @Cascade(CascadeType.DELETE)//配置级联时，不要使用DELETE级别，否则删除student时可能会发生异常
+    //2
+    /*@Transient*/
     private Teacher teacher;
 
     public String getId() {
