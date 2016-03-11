@@ -1,9 +1,12 @@
 package com.tbc.elf.app.uc.model;
 
 import com.tbc.elf.base.model.BaseModel;
-import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.Date;
 
 /**
@@ -74,8 +77,10 @@ public class Group extends BaseModel {
     /**
      * 群组分类Id
      */
-    @Column(nullable = false, length = 32)
-    private String groupCategoryId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    @Cascade(value = CascadeType.SAVE_UPDATE)
+    private GroupCategory category;
 
     /**
      * 最大人数
@@ -163,12 +168,12 @@ public class Group extends BaseModel {
         this.groupName = groupName;
     }
 
-    public String getGroupCategoryId() {
-        return groupCategoryId;
+    public GroupCategory getCategory() {
+        return category;
     }
 
-    public void setGroupCategoryId(String groupCategoryId) {
-        this.groupCategoryId = groupCategoryId;
+    public void setCategory(GroupCategory category) {
+        this.category = category;
     }
 
     public int getMaxPersonLimit() {

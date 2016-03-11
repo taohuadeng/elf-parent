@@ -1,12 +1,12 @@
 package com.tbc.elf.app.uc.model;
 
 import com.tbc.elf.base.model.BaseModel;
-import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.*;
 import org.hibernate.annotations.CascadeType;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,6 +78,7 @@ public class Authority extends BaseModel {
 
     @ManyToMany(mappedBy = "authorities", fetch = FetchType.EAGER)
     @Cascade(value = CascadeType.SAVE_UPDATE)
+    @Fetch(FetchMode.SELECT)
     public List<Role> roles = new ArrayList<Role>();
 
     public String getAuthorityId() {

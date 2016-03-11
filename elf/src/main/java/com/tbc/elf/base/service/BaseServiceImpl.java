@@ -58,6 +58,7 @@ public class BaseServiceImpl<T> implements BaseService<T> {
     }
 
     @Override
+    @Transactional(readOnly = false,isolation = Isolation.READ_COMMITTED)
     public void update(T model) {
         baseService.update(model);
     }
