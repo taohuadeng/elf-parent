@@ -34,8 +34,7 @@ public class BulkDataTest extends BaseTests {
     @Test
     @Rollback(false)
     public void testJDBCInsert() throws SQLException, ClassNotFoundException {
-        Class.forName("org.postgresql.Driver");
-        Connection connection = DriverManager.getConnection("jdbc:postgresql://192.168.1.218:5432/elf_test", "postgres", "Eln4postgres123");
+        Connection connection = getConnection();
         connection.setAutoCommit(false);
         PreparedStatement pst = connection.prepareStatement("insert into t_test_card(card_id,card_number) values (?,?);");
         long beginTime = System.currentTimeMillis();
@@ -55,6 +54,11 @@ public class BulkDataTest extends BaseTests {
         System.out.println("共用时：" + (endTime - beginTime)/1000 + "秒");
         pst.close();
         connection.close();
+    }
+
+    private Connection getConnection() throws ClassNotFoundException, SQLException {
+        Class.forName("org.postgresql.Driver");
+        return DriverManager.getConnection("jdbc:postgresql://192.168.1.218:5432/elf_test", "postgres", "Eln4postgres123");
     }
 
     /**
@@ -102,7 +106,36 @@ public class BulkDataTest extends BaseTests {
 
     @Test
     public void testJoinQuery() {
+        long beginTime = System.currentTimeMillis();
+        String hql = "select p from Person p left join p.card card";
+        List<Person> persons = personService.listByHQL(hql, null);
+        System.out.println(persons.get(0).getPersonName());
+        System.out.println(persons.size());
+        long endTime = System.currentTimeMillis();
+        System.out.println("共用时：" + (endTime - beginTime)/1000 + "秒");
+    }
 
+    @Test
+    public void testJDBCJoinQuery() throws SQLException, ClassNotFoundException {
+        long beginTime = System.currentTimeMillis();
+        Connection connection = getConnection();
+        PreparedStatement pst = connection.prepareStatement("select p.* from t_test_person p left join t_test_card c on c.card_id = p.card_id");
+        ResultSet resultSet = pst.executeQuery();
+        List<Person> personList = new ArrayList<Person>(100000);
+        while (resultSet.next()) {
+            String personId = resultSet.getString("person_id");
+            String personName = resultSet.getString("person_name");
+            String sex = resultSet.getString("sex");
+
+            Person person = new Person();
+            person.setPersonId(personId);
+            person.setPersonName(personName);
+            person.setSex(sex);
+            personList.add(person);
+        }
+        System.out.println(personList.size());
+        long endTime = System.currentTimeMillis();
+        System.out.println("共用时：" + (endTime - beginTime)/1000 + "秒");
     }
 
 }
