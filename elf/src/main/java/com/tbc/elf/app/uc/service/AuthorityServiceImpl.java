@@ -1,5 +1,6 @@
 package com.tbc.elf.app.uc.service;
 
+import com.googlecode.ehcache.annotations.Cacheable;
 import com.tbc.elf.app.uc.model.Authority;
 import com.tbc.elf.base.security.util.AuthenticationUtil;
 import com.tbc.elf.base.service.BaseServiceImpl;
@@ -21,6 +22,7 @@ public class AuthorityServiceImpl extends BaseServiceImpl<Authority> implements 
     private RoleService roleService;
 
     @Override
+    @Cacheable(cacheName = "commonCache")
     @Transactional(readOnly = true)
     public List<String> listAuthorityUrls(String userId) {
         Assert.hasText(userId, "UserId is empty!");

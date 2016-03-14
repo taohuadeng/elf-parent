@@ -169,14 +169,16 @@ public class HibernateBaseService {
     }
 
     public <T> T get(Class<T> entityClass, Serializable id) {
-        Object result = getHibernateTemplate().get(entityClass, id);
+        return (T) this.getSession().get(entityClass, id);
+        /*Object result = getHibernateTemplate().get(entityClass, id);
         Assert.notNull(result, "Class[" + entityClass + "] with id[" + id + "] not found!");
-        return (T) result;
+        return (T) result;*/
     }
 
     @Transactional
     public <T> T load(Class<T> entityClass, Serializable id) {
-        return (T) getHibernateTemplate().load(entityClass, id);
+        return (T) this.getSession().load(entityClass, id);
+        //return (T) getHibernateTemplate().load(entityClass, id);
     }
 
     public <T> T merge(T model) {

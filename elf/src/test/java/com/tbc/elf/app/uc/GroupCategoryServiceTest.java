@@ -8,6 +8,8 @@ import org.junit.Test;
 import org.springframework.test.annotation.Rollback;
 
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 /**
  * 群组类别的单元测试
@@ -15,7 +17,7 @@ import javax.annotation.Resource;
  * @author ELF@TEAM
  * @since 2016年2月29日 17:18:30
  */
-public class GroupCategoryServiceTest extends BaseTests{
+public class GroupCategoryServiceTest extends BaseTests {
 
     @Resource
     private GroupCategoryService groupCategoryService;
@@ -29,4 +31,16 @@ public class GroupCategoryServiceTest extends BaseTests{
         String id = groupCategoryService.saveOrUpdate(groupCategory);
         Assert.assertNotNull(id);
     }
+
+    @Test
+    public void testGet() {
+        GroupCategory category = groupCategoryService.get("402881fe535f881601535f881feb0001");
+        category = groupCategoryService.get("402881fe535f881601535f881feb0001");
+        category = groupCategoryService.load("402881fe535f881601535f881feb0001");
+
+        String hql = "from GroupCategory where groupCategoryId = ?";
+        List<GroupCategory> groupCategories = groupCategoryService.listByHQL(hql, new Object[]{"402881fe535f881601535f881feb0001"});
+        groupCategories = groupCategoryService.listByHQL(hql, new Object[]{"402881fe535f881601535f881feb0001"});
+    }
+
 }

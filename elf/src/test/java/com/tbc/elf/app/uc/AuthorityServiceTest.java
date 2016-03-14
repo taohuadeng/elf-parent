@@ -209,6 +209,7 @@ public class AuthorityServiceTest extends BaseTests {
     public void testGetAuthorities() {
         List<String> list = authorityService.listAuthorityUrls("uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu");
         Assert.assertNotNull(list);
+        list = authorityService.listAuthorityUrls("uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu");
         for (String s : list) {
             LOG.info(s);
         }

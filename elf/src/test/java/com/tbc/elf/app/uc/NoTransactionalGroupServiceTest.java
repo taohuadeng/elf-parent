@@ -8,6 +8,11 @@ import com.tbc.elf.app.uc.service.AuthorityService;
 import com.tbc.elf.app.uc.service.GroupCategoryService;
 import com.tbc.elf.app.uc.service.GroupService;
 import com.tbc.elf.app.uc.service.RoleService;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
@@ -82,7 +87,7 @@ public class NoTransactionalGroupServiceTest {
      * 结论 不会级联查询
      */
     @Test
-    public void test级联修改单向多对一() {
+    public void test级联查询单向多对一() {
         String hql = "FROM Group WHERE corpCode = ?";
         List<Group> groups = groupService.listByHQL(hql, new Object[]{"default"});
         for (Group group : groups) {
@@ -101,5 +106,39 @@ public class NoTransactionalGroupServiceTest {
         for (GroupCategory category : categories) {
             categoryService.delete(category.getGroupCategoryId());
         }
+    }
+
+    /**
+     * Group 单向关联 GroupCategory
+     * 情况一
+     * 条件 不配置fetch属性
+     * 结论 会级联查询
+     * 情况二
+     * 条件 配置fetch属性 @ManyToOne(fetch = FetchType.EAGER) 属性 <h1>默认属性</h1>
+     * 结论 会级联查询
+     * 情况三
+     * 条件 配置fetch属性 @ManyToOne(fetch = FetchType.LAZY) 属性
+     * 结论 不会级联查询
+     */
+    @Test
+    public void test查询() {
+        Group group = groupService.get("402881fe535f881601535f881fdf0000");
+        Configuration cfg = new Configuration().configure();
+        SessionFactory factory = cfg.buildSessionFactory();
+        Session session = factory.openSession();
+        Transaction ts = null;
+        try {
+            ts = session.beginTransaction(); //开始一个事务
+            //执行事务
+            ts.commit();                           //提交事务
+        } catch (HibernateException e) {     //如果出现异常就撤销事务
+            if (ts != null) {
+                ts.rollback();                        //回滚事务
+            }
+            e.printStackTrace();
+        } finally {
+            session.close();//不管事务执行成功与否,最后都关闭Session并且放在finally中以提高安全性
+        }
+
     }
 }
