@@ -35,6 +35,14 @@
                                 expression="org.springframework.stereotype.Service"/>
     </context:component-scan>
 
+    <context:component-scan base-package="com.tbc.elf.**.uploadFile">
+        <context:include-filter type="annotation"
+                                expression="org.springframework.stereotype.Controller"/>
+        <context:exclude-filter type="annotation"
+                                expression="org.springframework.stereotype.Service"/>
+    </context:component-scan>
+
+
     <!-- 把逻辑视图名称映射到真正视图上 -->
     <bean class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
         <property name="templateLoaderPath" value="/pages/"/>
