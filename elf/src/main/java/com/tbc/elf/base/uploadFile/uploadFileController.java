@@ -76,9 +76,9 @@ public class uploadFileController {
         List<String> fileIds = new ArrayList<String>();
         String module = uploadResult.getModule();
         try {
-            String fileId = UUIDGenerator.uuid();
-            fileIds.add(fileId);
             while (fileNames.hasNext()) {
+                String fileId = UUIDGenerator.uuid();
+                fileIds.add(fileId);
                 MultipartFile file = multipartRequest.getFile(fileNames.next());
                 if (file == null) {
                     deleteFile(fileIds, module);
@@ -145,7 +145,7 @@ public class uploadFileController {
 
     @RequestMapping(value = "/getFile/{fileId}")
     public void getFile(@PathVariable("fileId") String fileId, HttpServletResponse response) throws Exception {
-        String parent = filePath + fileId + FILE_SEPARATOR;
+        String parent = filePath + null + FILE_SEPARATOR + fileId + FILE_SEPARATOR;
         String metadata = IOUtils.toString(new FileInputStream(parent + FILE_UPLOAD_METADATA));
         UploadFile uploadFile = GSON.fromJson(metadata, UploadFile.class);
         response.setCharacterEncoding("utf-8");

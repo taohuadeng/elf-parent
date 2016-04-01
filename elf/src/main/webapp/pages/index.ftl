@@ -32,7 +32,7 @@
 
 <form id="fileForm" action="/elf/fileUpload/uploadFile" method="post" enctype="multipart/form-data">
     file1:<input type="file" name="file1" style="margin-left: 200px;margin-bottom: 100px"/><br>
-   <#-- file2:<input type="file" name="file2" style="margin-left: 200px;margin-bottom: 100px"/><br>-->
+    file2:<input type="file" name="file2" style="margin-left: 200px;margin-bottom: 100px"/><br>
     <input type="button" value="upload" style="margin-left: 200px;margin-bottom: 100px" id="upload"/>
 
 </form>
