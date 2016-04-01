@@ -11,9 +11,11 @@ import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -43,8 +45,10 @@ public class uploadFileController {
 
     @ResponseBody
     @RequestMapping(value = "/handleMaxUploadSizeException")
-    public UploadResult handleMaxUploadSizeException() {
+    public UploadResult handleMaxUploadSizeException(HttpServletRequest request) {
         UploadResult uploadResult = new UploadResult();
+        uploadResult.setMaxUploadSize(((MaxUploadSizeExceededException)
+                request.getAttribute(SimpleMappingExceptionResolver.DEFAULT_EXCEPTION_ATTRIBUTE)).getMaxUploadSize());
         uploadResult.setResult(UploadResult.Result.FAILED.name());
         uploadResult.setErrorType(UploadResult.ErrorType.MAX_UPLOAD_SIZE.name());
         return uploadResult;

@@ -48,6 +48,8 @@ public class UploadResult {
      */
     private List<UploadFile> files;
 
+    private long maxUploadSize;
+
     public String getResult() {
         return result;
     }
@@ -110,6 +112,14 @@ public class UploadResult {
 
     public void setFiles(List<UploadFile> files) {
         this.files = files;
+    }
+
+    public long getMaxUploadSize() {
+        return maxUploadSize;
+    }
+
+    public void setMaxUploadSize(long maxUploadSize) {
+        this.maxUploadSize = maxUploadSize;
     }
 
     public enum Result {
