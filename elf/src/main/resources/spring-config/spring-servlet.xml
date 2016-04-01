@@ -13,7 +13,7 @@
     <mvc:annotation-driven/>
     <!-- 处理Json数据 3.2之前无需配置 --><!--org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter-->
     <!--<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"> 3.2后已废弃-->
-    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+    <!--<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
         <property name="messageConverters">
             <bean class="org.springframework.http.converter.json.GsonHttpMessageConverter">
                 <property name="supportedMediaTypes">
@@ -26,7 +26,7 @@
                 </property>
             </bean>
         </property>
-    </bean>
+    </bean>-->
     <!-- 把请求映射到controller -->
     <context:component-scan base-package="com.tbc.elf.**.controller">
         <context:include-filter type="annotation"
@@ -64,8 +64,18 @@
     <bean id="multipartResolver"
           class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <property name="defaultEncoding" value="utf-8"/>
-        <property name="maxUploadSize" value="4926529000"/>
+        <property name="maxUploadSize" value="1"/>
         <property name="maxInMemorySize" value="20"/>
+    </bean>
+
+    <bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="exceptionMappings">
+            <props>
+                <prop key="org.springframework.web.multipart.MaxUploadSizeExceededException">
+                    forward:/fileUpload/handleMaxUploadSizeException
+                </prop>
+            </props>
+        </property>
     </bean>
 
     <!--<mvc:resources mapping="/css/**" location="/css/"/>

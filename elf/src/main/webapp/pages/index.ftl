@@ -1,14 +1,36 @@
-
 <html>
 <head>
+    <script src="http://www.tbc.com/xfs/js/jquery.min.js"></script>
+    <script src="http://malsup.github.io/jquery.form.js"></script>
+    <script>
+        $(function () {
+            $("#id").click(function () {
+                $.post("http://localhost:8080/elf/fileUpload/testJson", function (json) {
+                    alert(json.responseFormat);
+                    alert(json);
+                    console.log(json);
+                });
+            });
+
+            $("#upload").click(function () {
+                $("#fileForm").ajaxSubmit({
+                    url: '/elf/fileUpload/uploadFile',
+                    type: 'post',
+                    success: function (data) {
+                        console.log(data);
+                    }
+                });
+            });
+        });
+    </script>
 </head>
 <body>
-<form action="/elf/fileUpload/uploadFile" method="post" enctype="multipart/form-data">
- <#--   <input type="hidden" name="method" value="upload"/>-->
+
+<a id="id" href="javascript:void(0)" style="display:block;width: 200px;height: 200px;color: red">a</a>
+
+<form id="fileForm" action="/elf/fileUpload/uploadFile" method="post" enctype="multipart/form-data">
     file:<input type="file" name="file1"/>
-   <#-- <input type="hidden" name="fileName" value="嗡嗡嗡"/>
-     <input type="hidden" name="fileType" value="fs"/>-->
-    <input type="submit" value="upload"/>
+    <input type="button" value="upload" id="upload"/>
 
 </form>
 </body>

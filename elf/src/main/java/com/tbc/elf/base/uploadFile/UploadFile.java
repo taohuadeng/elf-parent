@@ -7,46 +7,75 @@ import java.util.Date;
 
 public class UploadFile {
 
-    //处理结果
-    private String result;
-    //处理结果详情，如果是错误是异常
-    private Object detail;
-    //文件ID
+    /**
+     * 文件ID
+     */
     private String fileId;
-    //文件
+
+    /**
+     * 文件名称
+     */
     private String fileName;
-    //文件类型
+
+    /**
+     * 文件所属功能模块
+     */
     private String fileType = FileType.fs.name();
-    //文件结尾
+
+    /**
+     * 文件结尾
+     */
     private String suffix;
-    //文件对象
+
+    /**
+     * 文件对象
+     */
     private MultipartFile file;
-    //返回类型
+
+    /**
+     * 返回类型处理完后返回类型
+     */
     private String responseFormat = ResponseFormat.json.name();
-    //文件大小
+
+    /**
+     * 文件大小
+     */
     private long fileSize;
-    //文件上传时间
+
+    /**
+     * 文件上传时间
+     */
     private Date uploadTime = new Date();
-    //文件上传花费时间
+
+    /**
+     * 文件上传花费时间
+     */
     private long costTime;
-    //文件内容类型
+
+    /**
+     * 文件内容类型
+     */
     private String contentType;
 
-    public String getResult() {
-        return result;
-    }
+    /**
+     * 文件所属人员
+     */
+    private String owner;
 
-    public void setResult(String result) {
-        this.result = result;
-    }
+    /**
+     * 文件处理结果
+     */
+    private String result;
 
-    public Object getDetail() {
-        return detail;
-    }
+    /**
+     * 处理结果详情，如果是错误为异常信息
+     */
+    private Object detail;
 
-    public void setDetail(Object detail) {
-        this.detail = detail;
-    }
+    /**
+     * 错误类型，上传成功时为null,错误时参考枚举ErrorType
+     */
+    private String errorType;
 
     public String getFileId() {
         return fileId;
@@ -128,8 +157,40 @@ public class UploadFile {
         this.contentType = contentType;
     }
 
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
+    }
+
+    public Object getDetail() {
+        return detail;
+    }
+
+    public void setDetail(Object detail) {
+        this.detail = detail;
+    }
+
+    public String getErrorType() {
+        return errorType;
+    }
+
+    public void setErrorType(String errorType) {
+        this.errorType = errorType;
+    }
+
     public enum Result {
-        success, failed
+        SUCCESS, FAILED
     }
 
     public enum FileType {
@@ -138,5 +199,9 @@ public class UploadFile {
 
     public enum ResponseFormat {
         json, html, xml
+    }
+
+    public enum ErrorType {
+        UN_KNOW_ERROR, MAX_UPLOAD_SIZE, NO_FILE_UPLOADED, NOT_SUPPORT_MULTI_FILE, UPLOAD_STYLE_ERROR
     }
 }
