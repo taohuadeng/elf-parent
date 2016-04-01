@@ -18,10 +18,8 @@ import org.springframework.web.multipart.MultipartResolver;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.net.URLEncoder;
 import java.util.*;
 
 @RequestMapping("/fileUpload")
@@ -144,14 +142,29 @@ public class uploadFileController {
     }
 
     @RequestMapping(value = "/getFile/{fileId}")
-    public void getFile(@PathVariable("fileId") String fileId, HttpServletResponse response) throws Exception {
+    public void getFile(@PathVariable("fileId") String fileId, HttpServletRequest request
+            , HttpServletResponse response) throws Exception {
         String parent = filePath + null + FILE_SEPARATOR + fileId + FILE_SEPARATOR;
         String metadata = IOUtils.toString(new FileInputStream(parent + FILE_UPLOAD_METADATA));
         UploadFile uploadFile = GSON.fromJson(metadata, UploadFile.class);
         response.setCharacterEncoding("utf-8");
         response.setContentType(uploadFile.getContentType());
-        response.setHeader("Content-Disposition", "attachment;fileName=" + uploadFile.getFileName());
+        response.setHeader("Content-Disposition", "attachment;fileName="
+                + getEncodeFileName(request, uploadFile.getFileName()));
         IOUtils.copy(new FileInputStream(parent + FILE_UPLOAD_DATA), response.getWriter());
+    }
+
+    private String getEncodeFileName(HttpServletRequest request, String fileName) {
+        try {
+            String userAgent = request.getHeader("User-Agent").toUpperCase();
+            if (userAgent.contains("MSIE") || (userAgent.contains("GECKO") && userAgent.contains("RV:11"))) {
+                return URLEncoder.encode(fileName, "UTF-8");
+            }
+
+            return new String(fileName.getBytes(), "ISO8859-1");
+        } catch (Exception e) {
+            return fileName;
+        }
     }
 
 }
