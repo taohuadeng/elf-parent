@@ -1,8 +1,6 @@
 package com.tbc.elf.base.uploadFile;
 
 
-import org.springframework.web.multipart.MultipartFile;
-
 import java.util.Date;
 
 public class UploadFile {
@@ -20,22 +18,12 @@ public class UploadFile {
     /**
      * 文件所属功能模块
      */
-    private String fileType = FileType.fs.name();
+    private String module;
 
     /**
      * 文件结尾
      */
     private String suffix;
-
-    /**
-     * 文件对象
-     */
-    private MultipartFile file;
-
-    /**
-     * 返回类型处理完后返回类型
-     */
-    private String responseFormat = ResponseFormat.json.name();
 
     /**
      * 文件大小
@@ -62,21 +50,6 @@ public class UploadFile {
      */
     private String owner;
 
-    /**
-     * 文件处理结果
-     */
-    private String result;
-
-    /**
-     * 处理结果详情，如果是错误为异常信息
-     */
-    private Object detail;
-
-    /**
-     * 错误类型，上传成功时为null,错误时参考枚举ErrorType
-     */
-    private String errorType;
-
     public String getFileId() {
         return fileId;
     }
@@ -93,12 +66,12 @@ public class UploadFile {
         this.fileName = fileName;
     }
 
-    public String getFileType() {
-        return fileType;
+    public String getModule() {
+        return module;
     }
 
-    public void setFileType(String fileType) {
-        this.fileType = fileType;
+    public void setModule(String module) {
+        this.module = module;
     }
 
     public String getSuffix() {
@@ -107,22 +80,6 @@ public class UploadFile {
 
     public void setSuffix(String suffix) {
         this.suffix = suffix;
-    }
-
-    public MultipartFile getFile() {
-        return file;
-    }
-
-    public void setFile(MultipartFile file) {
-        this.file = file;
-    }
-
-    public String getResponseFormat() {
-        return responseFormat;
-    }
-
-    public void setResponseFormat(String responseFormat) {
-        this.responseFormat = responseFormat;
     }
 
     public long getFileSize() {
@@ -163,45 +120,5 @@ public class UploadFile {
 
     public void setOwner(String owner) {
         this.owner = owner;
-    }
-
-    public String getResult() {
-        return result;
-    }
-
-    public void setResult(String result) {
-        this.result = result;
-    }
-
-    public Object getDetail() {
-        return detail;
-    }
-
-    public void setDetail(Object detail) {
-        this.detail = detail;
-    }
-
-    public String getErrorType() {
-        return errorType;
-    }
-
-    public void setErrorType(String errorType) {
-        this.errorType = errorType;
-    }
-
-    public enum Result {
-        SUCCESS, FAILED
-    }
-
-    public enum FileType {
-        fs, sys, course
-    }
-
-    public enum ResponseFormat {
-        json, html, xml
-    }
-
-    public enum ErrorType {
-        UN_KNOW_ERROR, MAX_UPLOAD_SIZE, NO_FILE_UPLOADED, NOT_SUPPORT_MULTI_FILE, UPLOAD_STYLE_ERROR
     }
 }

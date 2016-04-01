@@ -1,6 +1,9 @@
 package com.tbc.elf.base.uploadFile;
 
 import com.google.gson.Gson;
+import com.tbc.elf.base.util.UUIDGenerator;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -19,8 +22,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.UUID;
+import java.util.*;
 
 @RequestMapping("/fileUpload")
 @Controller
@@ -43,83 +45,102 @@ public class uploadFileController {
 
     @ResponseBody
     @RequestMapping(value = "/handleMaxUploadSizeException")
-    public UploadFile handleMaxUploadSizeException() {
-        UploadFile uploadFile = new UploadFile();
-        uploadFile.setResult(UploadFile.Result.FAILED.name());
-        uploadFile.setErrorType(UploadFile.ErrorType.MAX_UPLOAD_SIZE.name());
-        return uploadFile;
+    public UploadResult handleMaxUploadSizeException() {
+        UploadResult uploadResult = new UploadResult();
+        uploadResult.setResult(UploadResult.Result.FAILED.name());
+        uploadResult.setErrorType(UploadResult.ErrorType.MAX_UPLOAD_SIZE.name());
+        return uploadResult;
     }
 
     @ResponseBody
     @RequestMapping(value = "/uploadFile")
-    public UploadFile uploadFile(HttpServletRequest request) {
-        UploadFile uploadFile = new UploadFile();
-        String fileId = UUID.randomUUID().toString().replace("-", "");
-        try {
-            new ServletRequestDataBinder(uploadFile).bind(request);
-            MultipartFile file = uploadFile.getFile();
-            if (file != null) {
-                processUploadFile(fileId, uploadFile, file);
-                uploadFile.setFile(null);
-                return uploadFile;
-            }
-
-            if (!multipartResolver.isMultipart(request)) {
-                uploadFile.setResult(UploadFile.Result.FAILED.name());
-                uploadFile.setErrorType(UploadFile.ErrorType.UPLOAD_STYLE_ERROR.name());
-                return uploadFile;
-            }
-
-            MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-            Iterator<String> fileNames = multipartRequest.getFileNames();
-            if (fileNames == null || !fileNames.hasNext()) {
-                uploadFile.setResult(UploadFile.Result.FAILED.name());
-                uploadFile.setErrorType(UploadFile.ErrorType.NO_FILE_UPLOADED.name());
-                return uploadFile;
-            }
-
-            String fileName = fileNames.next();
-            if (fileNames.hasNext()) {
-                uploadFile.setResult(UploadFile.Result.FAILED.name());
-                uploadFile.setErrorType(UploadFile.ErrorType.NOT_SUPPORT_MULTI_FILE.name());
-                return uploadFile;
-            }
-
-            file = multipartRequest.getFile(fileName);
-            if (file == null) {
-                uploadFile.setResult(UploadFile.Result.FAILED.name());
-                uploadFile.setErrorType(UploadFile.ErrorType.NO_FILE_UPLOADED.name());
-                return uploadFile;
-            }
-
-            processUploadFile(fileId, uploadFile, file);
-            return uploadFile;
-        } catch (Exception e) {
-            uploadFile.setResult(UploadFile.Result.FAILED.name());
-            uploadFile.setErrorType(UploadFile.ErrorType.UN_KNOW_ERROR.name());
-            uploadFile.setDetail(e);
+    public UploadResult uploadFile(HttpServletRequest request) {
+        UploadResult uploadResult = new UploadResult();
+        if (!multipartResolver.isMultipart(request)) {
+            uploadResult.setResult(UploadResult.Result.FAILED.name());
+            uploadResult.setErrorType(UploadResult.ErrorType.UPLOAD_STYLE_ERROR.name());
+            return uploadResult;
         }
+
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+        Iterator<String> fileNames = multipartRequest.getFileNames();
+        if (fileNames == null || !fileNames.hasNext()) {
+            uploadResult.setResult(UploadResult.Result.FAILED.name());
+            uploadResult.setErrorType(UploadResult.ErrorType.NO_FILE_UPLOADED.name());
+            return uploadResult;
+        }
+
+        new ServletRequestDataBinder(uploadResult).bind(request);
+        List<UploadFile> uploadFiles = new ArrayList<UploadFile>();
+        uploadResult.setFiles(uploadFiles);
+        List<String> fileIds = new ArrayList<String>();
+        String module = uploadResult.getModule();
+        try {
+            String fileId = UUIDGenerator.uuid();
+            fileIds.add(fileId);
+            while (fileNames.hasNext()) {
+                MultipartFile file = multipartRequest.getFile(fileNames.next());
+                if (file == null) {
+                    deleteFile(fileIds, module);
+                    uploadResult.setResult(UploadResult.Result.FAILED.name());
+                    uploadResult.setErrorType(UploadResult.ErrorType.UPLOAD_FILE_NOE_EXIST.name());
+                    return uploadResult;
+                }
+
+                uploadFiles.add(uploadFile(fileId, module, file));
+            }
+
+            uploadResult.setCostTime(new Date().getTime() - uploadResult.getUploadTime().getTime());
+            uploadResult.setResult(UploadResult.Result.SUCCESS.name());
+        } catch (Exception e) {
+            uploadResult.setResult(UploadResult.Result.FAILED.name());
+            uploadResult.setErrorType(UploadResult.ErrorType.UN_KNOW_ERROR.name());
+            uploadResult.setDetail(e);
+            deleteFile(fileIds, module);
+        }
+
+        return uploadResult;
+    }
+
+    private UploadFile uploadFile(String fileId, String module, MultipartFile file) throws Exception {
+        UploadFile uploadFile = new UploadFile();
+        uploadFile.setFileId(fileId);
+        String filename = file.getOriginalFilename();
+        uploadFile.setFileName(filename);
+        uploadFile.setModule(module);
+        uploadFile.setSuffix(filename.contains(".") ? filename.substring(filename.indexOf(".") + 1) : null);
+        uploadFile.setFileSize(file.getSize());
+        uploadFile.setContentType(file.getContentType());
+        //uploadFile.setOwner(上传人);
+
+        File parent = new File(filePath + module + FILE_SEPARATOR + fileId + FILE_SEPARATOR);
+        if (!parent.mkdirs()) {
+            throw new IOException("Create directory[" + parent.getAbsoluteFile() + "] failed!");
+        }
+        IOUtils.copy(file.getInputStream(), new FileOutputStream(new File(parent, FILE_UPLOAD_DATA)));
+        uploadFile.setCostTime(System.currentTimeMillis() - uploadFile.getUploadTime().getTime());
+        IOUtils.write(GSON.toJson(uploadFile), new FileOutputStream(new File(parent, FILE_UPLOAD_METADATA)));
 
         return uploadFile;
     }
 
-    private void processUploadFile(String fileId, UploadFile uploadFile, MultipartFile file) throws Exception {
-        uploadFile.setContentType(file.getContentType());
-        String filename = file.getOriginalFilename();
-        uploadFile.setFileName(filename);
-        uploadFile.setFileSize(file.getSize());
-        uploadFile.setSuffix(filename.contains(".")
-                ? filename.substring(filename.indexOf(".") + 1) : null);
-        File parent = new File(filePath + fileId + FILE_SEPARATOR);
-        if (!parent.mkdirs()) {
-            throw new IOException("Create directory[" + filePath + fileId + "/] failed!");
+    private void deleteFile(List<String> fileIds, String module) {
+        if (CollectionUtils.isEmpty(fileIds)) {
+            return;
         }
 
-        IOUtils.copy(file.getInputStream(), new FileOutputStream(new File(parent, FILE_UPLOAD_DATA)));
-        uploadFile.setCostTime(System.currentTimeMillis() - uploadFile.getUploadTime().getTime());
-        uploadFile.setFileId(fileId);
-        uploadFile.setResult(UploadFile.Result.SUCCESS.name());
-        IOUtils.write(GSON.toJson(uploadFile), new FileOutputStream(new File(parent, FILE_UPLOAD_METADATA)));
+        for (String fileId : fileIds) {
+            File file = new File(filePath + module + FILE_SEPARATOR + fileId + FILE_SEPARATOR);
+            if (!file.exists()) {
+                continue;
+            }
+
+            try {
+                FileUtils.forceDelete(file);
+            } catch (Exception e) {
+                //
+            }
+        }
     }
 
     @RequestMapping(value = "/getFile/{fileId}")

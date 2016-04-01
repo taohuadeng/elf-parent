@@ -26,11 +26,14 @@
 </head>
 <body>
 
+<#--
 <a id="id" href="javascript:void(0)" style="display:block;width: 200px;height: 200px;color: red">a</a>
+-->
 
 <form id="fileForm" action="/elf/fileUpload/uploadFile" method="post" enctype="multipart/form-data">
-    file:<input type="file" name="file1"/>
-    <input type="button" value="upload" id="upload"/>
+    file1:<input type="file" name="file1" style="margin-left: 200px;margin-bottom: 100px"/><br>
+   <#-- file2:<input type="file" name="file2" style="margin-left: 200px;margin-bottom: 100px"/><br>-->
+    <input type="button" value="upload" style="margin-left: 200px;margin-bottom: 100px" id="upload"/>
 
 </form>
 </body>
