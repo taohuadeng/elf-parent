@@ -98,6 +98,32 @@ public class AuthenticationUtil {
     }
 
     /**
+     * 取得当前用户所在公司
+     */
+    public static String getUserId() {
+        String result = null;
+        ELFUserDetails userDetails = getUserDetails();
+        if (userDetails != null) {
+            result = userDetails.getUserId();
+        }
+
+        return result;
+    }
+
+    /**
+     * 取得当前用户所在公司
+     */
+    public static void setUserId(String userId) {
+        ELFUserDetails userDetails = getUserDetails();
+        if (userDetails == null) {
+            userDetails = new ELFUserDetails();
+        }
+
+        userDetails.setCorpCode(userId);
+        setUserDetails(userDetails);
+    }
+
+    /**
      * 获取当前登录用户
      */
     public static Authentication getCurrentUserAuthentication() {

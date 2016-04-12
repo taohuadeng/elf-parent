@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class UploadResult {
     /**
-     * 文件处理结果
+     * 文件处理结果参考枚举{@link Result}
      */
     private String result;
 
@@ -19,7 +19,7 @@ public class UploadResult {
     private Object detail;
 
     /**
-     * 错误类型，上传成功时为null,错误时参考枚举ErrorType
+     * 错误类型，上传成功时为null,错误时参考枚举{@link ErrorType}
      */
     private String errorType;
 
@@ -48,6 +48,9 @@ public class UploadResult {
      */
     private List<UploadFile> files;
 
+    /**
+     * 上传文件最大大小
+     */
     private long maxUploadSize;
 
     public String getResult() {
@@ -127,6 +130,15 @@ public class UploadResult {
     }
 
     public enum ErrorType {
-        UN_KNOW_ERROR, MAX_UPLOAD_SIZE, NO_FILE_UPLOADED, UPLOAD_STYLE_ERROR, UPLOAD_FILE_NOE_EXIST
+        UN_KNOW_ERROR,
+        MAX_UPLOAD_SIZE,
+        NO_FILE_UPLOADED,
+        UPLOAD_STYLE_ERROR,
+        UPLOAD_FILE_NOT_EXIST,
+        MODULE_IS_EMPTY,
+        PARAM_ERROR,
+        FILE_NOT_EXIST,
+        FILE_NOT_IMAGE,
+        DRAW_IMAGE_FAILED
     }
 }

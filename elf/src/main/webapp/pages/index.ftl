@@ -5,7 +5,7 @@
     <script>
         $(function () {
             $("#id").click(function () {
-                $.post("http://localhost:8080/elf/fileUpload/testJson", function (json) {
+                $.post("http://localhost:8080/elf/file/testJson", function (json) {
                     alert(json.responseFormat);
                     alert(json);
                     console.log(json);
@@ -14,7 +14,7 @@
 
             $("#upload").click(function () {
                 $("#fileForm").ajaxSubmit({
-                    url: '/elf/fileUpload/uploadFile',
+                    url: '/elf/file/uploadFile',
                     type: 'post',
                     success: function (data) {
                         console.log(data);
@@ -30,9 +30,12 @@
 <a id="id" href="javascript:void(0)" style="display:block;width: 200px;height: 200px;color: red">a</a>
 -->
 
-<form id="fileForm" action="/elf/fileUpload/uploadFile" method="post" enctype="multipart/form-data">
+<form id="fileForm" action="/elf/file/uploadFile" method="post" enctype="multipart/form-data">
     file1:<input type="file" name="file1" style="margin-left: 200px;margin-bottom: 100px"/><br>
+<#--
     file2:<input type="file" name="file2" style="margin-left: 200px;margin-bottom: 100px"/><br>
+-->
+    <input type="hidden" name="module" value="uc"/><br>
     <input type="button" value="upload" style="margin-left: 200px;margin-bottom: 100px" id="upload"/>
 
 </form>
