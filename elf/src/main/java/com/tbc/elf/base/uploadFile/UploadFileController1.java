@@ -265,35 +265,27 @@ public class UploadFileController1 {
     @RequestMapping(value = "/getFile/{module}/{fileId}")
     public void getFile(@PathVariable("module") String module, @PathVariable("fileId") String fileId
             , HttpServletRequest request, HttpServletResponse response) {
-        String parentPath = commonFilePath + module + FILE_SEPARATOR + AuthenticationUtil.getCorpCode()
-                + FILE_SEPARATOR + fileId + FILE_SEPARATOR;
-        getFile(request, response, parentPath, null, false);
+        getFile(request, response, getParentPath(module, fileId), null, false);
     }
 
     @RequestMapping(value = "/getFile/{module}/{fileId}/{fileName}")
     public void getFile(@PathVariable("module") String module, @PathVariable("fileId") String fileId
             , @PathVariable("fileName") String fileName, HttpServletRequest request
             , HttpServletResponse response) throws Exception {
-        String parentPath = commonFilePath + module + FILE_SEPARATOR + AuthenticationUtil.getCorpCode()
-                + FILE_SEPARATOR + fileId + FILE_SEPARATOR;
-        getFile(request, response, parentPath, fileName, false);
+        getFile(request, response, getParentPath(module, fileId), fileName, false);
     }
 
     @RequestMapping(value = "/downloadFile/{module}/{fileId}")
     public void downloadFile(@PathVariable("module") String module, @PathVariable("fileId") String fileId
             , HttpServletRequest request, HttpServletResponse response) {
-        String parentPath = commonFilePath + module + FILE_SEPARATOR + AuthenticationUtil.getCorpCode()
-                + FILE_SEPARATOR + fileId + FILE_SEPARATOR;
-        getFile(request, response, parentPath, null, true);
+        getFile(request, response, getParentPath(module, fileId), null, true);
     }
 
     @RequestMapping(value = "/downloadFile/{module}/{fileId}/{fileName}")
     public void downloadFile(@PathVariable("module") String module, @PathVariable("fileId") String fileId
             , @PathVariable("fileName") String fileName, HttpServletRequest request
             , HttpServletResponse response) throws Exception {
-        String parentPath = commonFilePath + module + FILE_SEPARATOR + AuthenticationUtil.getCorpCode()
-                + FILE_SEPARATOR + fileId + FILE_SEPARATOR;
-        getFile(request, response, parentPath, fileName, true);
+        getFile(request, response, getParentPath(module, fileId), fileName, true);
     }
 
     private void getFile(HttpServletRequest request, HttpServletResponse response
