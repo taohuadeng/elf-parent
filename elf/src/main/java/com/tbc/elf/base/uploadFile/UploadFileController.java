@@ -36,12 +36,12 @@ import java.util.List;
  */
 @RequestMapping("/file")
 @Controller
-public class UploadFileController1 {
+public class UploadFileController {
 
     /**
      * 日志
      */
-    private static final Log LOG = LogFactory.getLog(UploadFileController1.class);
+    private static final Log LOG = LogFactory.getLog(UploadFileController.class);
 
     /**
      * 下载文件名称编码工具
