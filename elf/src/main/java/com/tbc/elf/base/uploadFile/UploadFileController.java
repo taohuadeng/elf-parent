@@ -134,11 +134,12 @@ public class UploadFileController {
         }
 
         try {
-            BufferedImage dest = src.getSubimage(x, y, width, height);
+            src = src.getSubimage(x, y, width, height);
+            BufferedImage dest = new BufferedImage(width, height, BufferedImage.TYPE_INT_BGR);
             Graphics graphics = dest.getGraphics();
             graphics.drawImage(src, 0, 0, width, height, null);
             String fileName = "x" + x + "y" + y + "w" + width + "h" + height;
-            ImageIO.write(dest, "JPEG", new FileOutputStream(parentPath + fileName));
+            ImageIO.write(src, "JPEG", new FileOutputStream(parentPath + fileName));
             cir.setFileName(fileName);
             cir.setResult(UploadResult.Result.SUCCESS.name());
         } catch (Throwable e) {
