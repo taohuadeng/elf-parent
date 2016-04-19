@@ -118,28 +118,12 @@ public class UploadFileController {
         }
 
         String parentPath = getParentPath(module, fileId);
-        BufferedImage src;
         try {
-            src = ImageIO.read(new FileInputStream(parentPath + FILE_UPLOAD_DATA));
-            if (src == null) {
-                cir.setResult(UploadResult.Result.FAILED.name());
-                cir.setErrorType(UploadResult.ErrorType.FILE_NOT_IMAGE.name());
-                return cir;
-            }
-        } catch (Throwable e) {
-            cir.setResult(UploadResult.Result.FAILED.name());
-            cir.setErrorType(UploadResult.ErrorType.FILE_NOT_EXIST.name());
-            cir.setDetail(e);
-            return cir;
-        }
-
-        try {
-            src = src.getSubimage(x, y, width, height);
-            BufferedImage dest = new BufferedImage(width, height, BufferedImage.TYPE_INT_BGR);
-            Graphics graphics = dest.getGraphics();
-            graphics.drawImage(src, 0, 0, width, height, null);
             String fileName = "x" + x + "y" + y + "w" + width + "h" + height;
-            ImageIO.write(src, "JPEG", new FileOutputStream(parentPath + fileName));
+            String crop = "crop=" + width + ":" + height + ":" + x + ":" + y + " ";
+            String command = "ffmpeg -i " + parentPath + FILE_UPLOAD_DATA
+                    + " -y -f image2 -vf " + crop + parentPath + fileName;
+            Runtime.getRuntime().exec(command);
             cir.setFileName(fileName);
             cir.setResult(UploadResult.Result.SUCCESS.name());
         } catch (Throwable e) {
